@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, session, Response
-from dbmgr import quickOpen, quickClose
+from dbmgr import quickOpen, quickClose, dbstartup
 
 app = Flask(__name__)
 app.secret_key = "DBMSGP"
@@ -37,11 +37,13 @@ cursor, conn = quickOpen()
 try:
     #Create tables here
     conn.commit()
-    print("Schema created")
+    print("Schema made")
 except Exception as e:
     print("Issue with making Schema")
     conn.rollback()
 finally:
     quickClose(cursor,conn)
     #hosts website to port 3000 to show website
+
+dbstartup()
 app.run(host='0.0.0.0', port=3000, debug=True)

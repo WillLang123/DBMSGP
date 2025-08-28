@@ -4,7 +4,6 @@ body {
     padding: 0;
 }
 
-/* Banner styling */
 .banner {
     background-color: #333;
     color: white;
@@ -22,7 +21,6 @@ body {
     padding: 20px;
 }
 
-/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -39,7 +37,6 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Buttons */
 .button-group {
     margin-top: 10px;
 }
@@ -66,4 +63,107 @@ input[type="text"] {
     width: 100%;
     padding: 6px;
     box-sizing: border-box;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+#modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  max-width: 90vw;
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 6px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  font-family: Arial, sans-serif;
+}
+
+#modal h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+  text-align: center;
+}
+
+#modal label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+#modal input[type="text"],
+#modal input[type="email"],
+#modal input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+#modal input[type="text"]:focus,
+#modal input[type="email"]:focus,
+#modal input[type="number"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+#modal .buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#modal button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#modal button.btn-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#modal button.btn-primary:hover {
+  background-color: #45a049;
+}
+
+#modal button.btn-secondary {
+  background-color: #f44336;
+  color: white;
+}
+
+#modal button.btn-secondary:hover {
+  background-color: #da190b;
+}
+
+@media (max-width: 400px) {
+  #modal {
+    width: 90vw;
+    padding: 15px 20px;
+  }
 }
