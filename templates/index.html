@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DBMSGP</title>
+    <script src="{{ url_for('static', filename='js/API.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    
-    <script src="{{ url_for('static', filename='js/API.js') }}"></script>
+    <div class="banner">
+        <a href="/">Home</a>
+    </div>
+    <div class="container">
+        <h2>Select a Table</h2>
+        <ul>
+            <li><a href="/students">Table 1</a></li>
+            <li><a href="/table2">Table 2</a></li>
+            <li><a href="/table3">Table 3</a></li>
+            <li><a href="/table4">Table 4</a></li>
+            <li><a href="/table5">Table 5</a></li>
+            <li><a href="/table6">Table 6</a></li>
+        </ul>
+    </div>
 </body>
 </html>

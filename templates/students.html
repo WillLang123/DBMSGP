@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students</title>
+    <script src="{{ url_for('static', filename='js/API.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="banner">
+        <a href="index.html">Home</a>
+    </div>
+    <div class="container">
+        <h2>Table 1</h2>
+
+        <div class="button-group">
+            <button class="add">Add</button>
+            <button class="delete">Delete</button>
+        </div>
+
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                    <th>Modify</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example row, can be populated dynamically -->
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td contenteditable="true">Data 1</td>
+                    <td contenteditable="true">Data 2</td>
+                    <td contenteditable="true">Data 3</td>
+                    <td><button>Modify</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

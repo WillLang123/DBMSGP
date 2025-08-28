@@ -8,6 +8,10 @@ app.secret_key = "DBMSGP"
 @app.route('/')
 def index():
     return render_template('index.html')
+#renders student page
+@app.route('/students')
+def students():
+    return render_template('students.html')
 
 # @app.route("/chatroom/<int:chatroomID>/send", methods=["POST"])
 # def handleSendMessage(chatroomID):
