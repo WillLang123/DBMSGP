@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, session, Response
-from dbmgr import quickOpen, quickClose, dbstartup
+from dbmgr import quickOpen, quickClose, dbstartup, populateDB, unpopulateDB
 
 app = Flask(__name__)
 app.secret_key = "DBMSGP"
@@ -45,5 +45,7 @@ finally:
     quickClose(cursor,conn)
     #hosts website to port 3000 to show website
 
+unpopulateDB()
+populateDB()
 dbstartup()
 app.run(host='0.0.0.0', port=3000, debug=True)

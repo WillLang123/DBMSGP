@@ -150,5 +150,4 @@ function deleteRow(id, rowElement) {
 
   return row;
 }
-
 */

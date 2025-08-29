@@ -66,7 +66,7 @@ def dbstartup():
         id INTEGER PRIMARY KEY,
         studentid INTEGER NOT NULL,
         courseid INTEGER NOT NULL,
-        enrolldate DATE NOT NULL,
+        enrollyear INTERGER NOT NULL,
         grade TEXT NOT NULL,
         FOREIGN KEY (studentid) REFERENCES Students(id),
         FOREIGN KEY (courseid) REFERENCES Courses(id)
@@ -78,7 +78,51 @@ def dbstartup():
 
     print(f"Database made")
 
+def unpopulateDB():
+    cursor, conn = quickOpen()
+    cursor.execute("""DELETE from Students""")
+    cursor.execute("""DELETE from Teachers""")
+    cursor.execute("""DELETE from Courses""")
+    cursor.execute("""DELETE from Enrollments""")
+    cursor.execute("""DELETE from Majors""")
+    cursor.execute("""DELETE from Subjects""")
+    conn.commit()
+    quickClose(cursor, conn)
+
 def populateDB():
     cursor, conn = quickOpen()
-
+    for i in range(1, 10):
+        fname = f"Test{i}"
+        lname = f"Test{i}"
+        email = f"Test{i}@lamar.edu"
+        name = f"Test{i}"
+        password = f"Test{i}"
+        enrollyear = 2000+i
+        code = f"Test{i}"
+        #enrolldate = None
+        grade = f"A"
+        cursor.execute("""
+            INSERT INTO Majors (id, name)
+            VALUES (?, ?)
+        """, (i, name))
+        cursor.execute("""
+            INSERT INTO Subjects (id, name)
+            VALUES (?, ?)
+        """, (i, name))
+        cursor.execute("""
+            INSERT INTO Teachers (id, fname, lname, email, password)
+            VALUES (?, ?, ?, ?, ?)
+        """, (i, fname, lname, email, password))
+        cursor.execute("""
+            INSERT INTO Students (id, fname, lname, email, majorid, enrollyear)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (i, fname, lname, email, i, enrollyear))
+        cursor.execute("""
+            INSERT INTO Courses (id, name, code, teacherid, subjectid, credits)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (i, name, code, i, i, i))
+        cursor.execute("""
+            INSERT INTO Enrollments (id, studentid, courseid, enrolldate, grade)
+            VALUES (?, ?, ?, ?, ?)
+        """, (i, i, i, enrollyear ,grade))
     quickClose(cursor, conn)
