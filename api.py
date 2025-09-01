@@ -1,6 +1,9 @@
 from flask import Flask, render_template, jsonify, request, session, Response
 from dbmgr import quickOpen, quickClose, dbstartup, populateDB, unpopulateDB
 
+#TODOS: make frontend nices, banner, student remove query, move some js functions with html file, prevent major/subject/teacher delete if used 
+# select for all forms, id to text translate/grab, streamline, make modular.
+
 app = Flask(__name__)
 app.secret_key = "DBMSGP"
 
@@ -86,15 +89,6 @@ def deletestudent(id):
         quickClose(cursor, conn)
         return jsonify({"error": str(e)}), 400
 
-
-# @app.route("/chatroom/<int:chatroomID>/send", methods=["POST"])
-# def handleSendMessage(chatroomID):
-
-# @app.route("/chatroom/<int:chatroomID>/stream")
-# def streamMessages(chatroomID):
-
-# @app.route("/createChatroom", methods=["POST"])
-# def handleCreateChatroom():
 
 # FOR ANY API CALL
 # dataFromAPI = request.get_json()
