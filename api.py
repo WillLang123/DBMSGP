@@ -13,6 +13,7 @@ def index():
 def students():
     return render_template('students.html')
 
+#Sends list of tuples to frontend
 @app.route('/get/students',methods=["GET"])
 def getstudents():
     cursor, conn = quickOpen()
@@ -44,9 +45,8 @@ def getstudents():
 
 cursor, conn = quickOpen()
 try:
-    #Create tables here
+    dbstartup()
     conn.commit()
-    print("Schema made")
 except Exception as e:
     print("Issue with making Schema")
     conn.rollback()
@@ -56,5 +56,5 @@ finally:
 
 unpopulateDB()
 populateDB()
-dbstartup()
+
 app.run(host='0.0.0.0', port=3000, debug=True)

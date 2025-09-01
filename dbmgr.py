@@ -75,8 +75,7 @@ def dbstartup():
 
     conn.commit()
     quickClose(cursor, conn)
-
-    print(f"Database made")
+    print("Schema made")
 
 def unpopulateDB():
     cursor, conn = quickOpen()
@@ -88,6 +87,7 @@ def unpopulateDB():
     cursor.execute("""DELETE from Subjects""")
     conn.commit()
     quickClose(cursor, conn)
+    print("DB Cleaned")
 
 def populateDB():
     cursor, conn = quickOpen()
@@ -125,4 +125,6 @@ def populateDB():
             INSERT INTO Enrollments (id, studentid, courseid, enrolldate, grade)
             VALUES (?, ?, ?, ?, ?)
         """, (i, i, i, enrollyear ,grade))
+    conn.commit()
     quickClose(cursor, conn)
+    print("DB popped")

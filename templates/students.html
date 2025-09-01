@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students</title>
-    <script src="{{ url_for('static', filename='js/API.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Students</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
   <div class="banner">
@@ -20,146 +19,52 @@
     <table id="data-table">
       <thead>
         <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Major ID</th>
-            <th>Enroll Year</th>
-            <th>Actions</th>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Major ID</th>
+          <th>Enroll Year</th>
+          <th>Actions</th>
         </tr>
-        </thead>
+      </thead>
 
       <tbody>
         <!-- fill in rows -->
       </tbody>
     </table>
   </div>
+
+  <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:100;"></div>
+
+  <div id="modal" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); background:white; padding:20px; z-index:101; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.3); width:300px;">
+    <h3>Add New Student</h3>
+    <form id="add-form">
+      <label>
+        First Name:<br />
+        <input type="text" name="fname" required />
+      </label><br /><br />
+      <label>
+        Last Name:<br />
+        <input type="text" name="lname" required />
+      </label><br /><br />
+      <label>
+        Email:<br />
+        <input type="email" name="email" required />
+      </label><br /><br />
+      <label>
+        Major ID:<br />
+        <input type="text" name="major_id" />
+      </label><br /><br />
+      <label>
+        Enrollment Year:<br />
+        <input type="number" name="enroll_year" required min="1900" max="2100" />
+      </label><br /><br />
+      <button type="submit">Add Student</button>
+      <button type="button" id="cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/frontapi.js') }}"></script>
 </body>
 </html>
-
-<div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:100;"></div>
-
-<div id="modal" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); background:white; padding:20px; z-index:101; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.3); width:300px;">
-  <h3>Add New Student</h3>
-  <form id="add-form">
-    <label>
-      First Name:<br />
-      <input type="text" name="fname" required />
-    </label><br /><br />
-    <label>
-      Last Name:<br />
-      <input type="text" name="lname" required />
-    </label><br /><br />
-    <label>
-      Email:<br />
-      <input type="email" name="email" required />
-    </label><br /><br />
-    <label>
-      Major ID:<br />
-      <input type="text" name="major_id" />
-    </label><br /><br />
-    <label>
-      Enrollment Year:<br />
-      <input type="number" name="enroll_year" required min="1900" max="2100" />
-    </label><br /><br />
-    <button type="submit">Add Student</button>
-    <button type="button" id="cancel-btn">Cancel</button>
-  </form>
-  <script>
-    function createRow(student) {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${student.id}</td>
-        <td contenteditable>${student.fname}</td>
-        <td contenteditable>${student.lname}</td>
-        <td contenteditable>${student.email}</td>
-        <td contenteditable>${student.major_id ?? ""}</td>
-        <td contenteditable>${student.enroll_year}</td>
-        <td>
-          <button class="modify-btn">Modify</button>
-          <button class="delete-btn">Delete</button>
-        </td>
-      `;
-
-      row.querySelector(".modify-btn").addEventListener("click", () => handleModifyStudent(row, student.id));
-      row.querySelector(".delete-btn").addEventListener("click", () => handleDeleteStudent(row, student.id));
-
-      return row;
-    }
-
-    function handleAddStudent(e) {
-      e.preventDefault();
-      const form = e.target;
-
-      const newStudent = {
-        fname: form.fname.value.trim(),
-        lname: form.lname.value.trim(),
-        email: form.email.value.trim(),
-        major_id: form.major_id.value.trim() || null,
-        enroll_year: form.enroll_year.value.trim(),
-      };
-
-      fetch("/api/students", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newStudent),
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to add student");
-          return res.json();
-        })
-        .then(student => {
-          document.querySelector("#data-table tbody").appendChild(createRow(student));
-          closeModal();
-        })
-        .catch(err => alert(err.message));
-    }
-
-    function handleModifyStudent(row, id) {
-      const cells = row.querySelectorAll("td");
-      const updatedStudent = {
-        fname: cells[1].textContent.trim(),
-        lname: cells[2].textContent.trim(),
-        email: cells[3].textContent.trim(),
-        major_id: cells[4].textContent.trim() || null,
-        enroll_year: cells[5].textContent.trim(),
-      };
-
-      fetch(`/api/students/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedStudent),
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to update student");
-          alert("Student updated!");
-        })
-        .catch(err => alert(err.message));
-    }
-
-    function handleDeleteStudent(row, id) {
-      if (!confirm("Delete this student?")) return;
-
-      fetch(`/api/students/${id}`, { method: "DELETE" })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to delete student");
-          row.remove();
-          alert("Student deleted!");
-        })
-        .catch(err => alert(err.message));
-    }
-
-    function openModal() {
-      document.getElementById("modal").style.display = "block";
-      document.getElementById("overlay").style.display = "block";
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("add-form").reset();
-    }
-  </script>
-</div>
