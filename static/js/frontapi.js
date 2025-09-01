@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const overlay = document.getElementById("modify-overlay");
     const form = document.getElementById("modify-form");
 
-    form.id.value = student[0]; // ID
+    form.id.value = student[0];
     form.fname.value = student[1];
     form.lname.value = student[2];
     form.email.value = student[3];
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
         .then(() => {
         closeModifyModal();
-        fetchData().then(manageStudents); // Refresh the table
+        fetchData().then(manageStudents);
         })
         .catch(err => alert(err.message));
     }
