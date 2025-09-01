@@ -41,15 +41,15 @@ function manageStudents() {
 function createRow(student) {
   const row = document.createElement("tr");
 
-  const [id, fname, lname, email, major_id, enroll_year] = student;
+  const [id, fname, lname, email, majorid, enrollyear] = student;
 
   row.innerHTML = `
     <td>${id}</td>
     <td contenteditable>${fname}</td>
     <td contenteditable>${lname}</td>
     <td contenteditable>${email}</td>
-    <td contenteditable>${major_id ?? ""}</td>
-    <td contenteditable>${enroll_year}</td>
+    <td contenteditable>${majorid}</td>
+    <td contenteditable>${enrollyear}</td>
     <td>
       <button class="modify-btn">Modify</button>
       <button class="delete-btn">Delete</button>
@@ -70,8 +70,8 @@ function handleAddStudent(e) {
     fname: form.fname.value.trim(),
     lname: form.lname.value.trim(),
     email: form.email.value.trim(),
-    major_id: form.major_id.value.trim() || null,
-    enroll_year: form.enroll_year.value.trim(),
+    majorid: form.majorid.value.trim(),
+    enrollyear: form.enrollyear.value.trim(),
   };
 
   fetch("/api/students", {
@@ -98,8 +98,8 @@ function handleModifyStudent(e) {
     fname: form.fname.value.trim(),
     lname: form.lname.value.trim(),
     email: form.email.value.trim(),
-    major_id: form.major_id.value.trim() || null,
-    enroll_year: form.enroll_year.value.trim(),
+    majorid: form.majorid.value.trim(),
+    enrollyear: form.enrollyear.value.trim(),
   };
 
   const id = form.id.value;
@@ -121,7 +121,7 @@ function handleModifyStudent(e) {
 }
 
 function handleDeleteStudent(id) {
-  if (!confirm("Delete this student?")) return;
+  if (!confirm("Delete this student? This will remove their enrollments too.")) return;
 
   fetch(`/api/students/${id}`, { method: "DELETE" })
     .then(res => {
@@ -140,8 +140,8 @@ function openModifyModal(student) {
   form.fname.value = student[1];
   form.lname.value = student[2];
   form.email.value = student[3];
-  form.major_id.value = student[4] ?? "";
-  form.enroll_year.value = student[5];
+  form.majorid.value = student[4];
+  form.enrollyear.value = student[5];
 
   modal.style.display = "block";
   overlay.style.display = "block";

@@ -11,17 +11,81 @@ def index():
 #renders student page
 @app.route("/students")
 def students():
-    return render_template('students.html')
+    return render_template("students.html")
 
 #Sends list of tuples to frontend
-@app.route('/get/students',methods=["GET"])
+@app.route("/get/students",methods=["GET"])
 def getstudents():
     cursor, conn = quickOpen()
-    cursor.execute("""SELECT * from Students""")
+    cursor.execute("SELECT * from Students")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
+
+@app.route("/api/students",methods=["POST"]) 
+def addstudent():
+    cursor, conn = quickOpen()
+    data = request.get_json()
+    try:
+        cursor.execute("""
+            INSERT INTO Students (fname, lname, email, majorid, enrollyear)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            data["fname"],
+            data["lname"],
+            data["email"],
+            int(data["majorid"]),
+            int(data["enrollyear"])
+        ))
+
+        conn.commit()
+        quickClose(cursor, conn)
+        return jsonify({"status": "success"}), 201
+
+    except Exception as e:
+        quickClose(cursor, conn)
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/api/students/<int:id>",methods=["PUT"])
+def modifystudent(id):
+    cursor, conn = quickOpen()
+    data = request.get_json()
+    try:
+        cursor.execute("""
+            UPDATE Students
+            SET fname = ?, lname = ?, email = ?, majorid = ?, enrollyear = ?
+            WHERE id = ?
+        """, (
+            data["fname"],
+            data["lname"],
+            data["email"],
+            int(data["majorid"]),
+            int(data["enrollyear"]),
+            id
+        ))
+
+        conn.commit()
+        quickClose(cursor, conn)
+        return jsonify({"status": "success"}), 200
+
+    except Exception as e:
+        quickClose(cursor, conn)
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/api/students/<int:id>",methods=["DELETE"])
+def deletestudent(id):
+    cursor, conn = quickOpen()
+    try:
+        cursor.execute("DELETE FROM Students WHERE id = ?", (id,))
+        #TODO remove all student enrollments
+        conn.commit()
+        quickClose(cursor, conn)
+        return jsonify({"status": "deleted"}), 200
         
+    except Exception as e:
+        quickClose(cursor, conn)
+        return jsonify({"error": str(e)}), 400
+
 
 # @app.route("/chatroom/<int:chatroomID>/send", methods=["POST"])
 # def handleSendMessage(chatroomID):
@@ -42,6 +106,18 @@ def getstudents():
 # curso.rollback();
 # output = jsonify({"words": "Blah blag"})
 # return output #so API knows what happened with transaction
+
+# Use this for Major delete/ subject delete:
+#cursor.execute("SELECT COUNT(*) FROM Students WHERE majorid = ?", (id))
+#        count = cursor.fetchone()[0]
+#        if count > 0:
+#            quickClose(cursor, conn)
+#            return jsonify({"error": str(e)}), 400
+#        else:
+#            cursor.execute("DELETE FROM Students WHERE id = ?", (id))
+#            conn.commit()
+#            quickClose(cursor, conn)
+#            return jsonify({"status": "deleted"}), 200
 
 cursor, conn = quickOpen()
 try:
