@@ -122,9 +122,9 @@ except Exception as e:
     conn.rollback()
 finally:
     quickClose(cursor,conn)
-    #hosts website to port 3000 to show website
 
 unpopulateDB()
 populateDB()
 
 app.run(host='0.0.0.0', port=3000, debug=True)
+#hosts website to port 3000 to show website
