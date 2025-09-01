@@ -5,13 +5,22 @@ app = Flask(__name__)
 app.secret_key = "DBMSGP"
 
 #renders index page
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 #renders student page
-@app.route('/students')
+@app.route("/students")
 def students():
     return render_template('students.html')
+
+@app.route('/get/students',methods=["GET"])
+def getstudents():
+    cursor, conn = quickOpen()
+    cursor.execute("""SELECT * from Students""")
+    data = cursor.fetchall()
+    quickClose(cursor, conn)
+    return jsonify(data)
+        
 
 # @app.route("/chatroom/<int:chatroomID>/send", methods=["POST"])
 # def handleSendMessage(chatroomID):
