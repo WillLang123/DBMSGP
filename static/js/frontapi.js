@@ -1,8 +1,8 @@
 let studentsData = [];
-let teachersData = [];
-let majorsData = [];
-let subjectsData = [];
+let professorsData = [];
+let departmentsData = [];
 let coursesData = [];
+let sectionsData = [];
 let enrollmentsData = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -41,15 +41,13 @@ function manageStudents() {
 function createRow(student) {
   const row = document.createElement("tr");
 
-  const [id, fname, lname, email, majorid, enrollyear] = student;
+  const [id, email, name, enrollmentyear] = student;
 
   row.innerHTML = `
     <td>${id}</td>
-    <td contenteditable>${fname}</td>
-    <td contenteditable>${lname}</td>
+    <td contenteditable>${name}</td>
     <td contenteditable>${email}</td>
-    <td contenteditable>${majorid}</td>
-    <td contenteditable>${enrollyear}</td>
+    <td contenteditable>${enrollmentyear}</td>
     <td>
       <button class="modify-btn">Modify</button>
       <button class="delete-btn">Delete</button>
@@ -66,18 +64,16 @@ function handleAddStudent(e) {
   e.preventDefault();
   const form = e.target;
 
-  const newStudent = {
-    fname: form.fname.value.trim(),
-    lname: form.lname.value.trim(),
+  const student = {
+    name: form.name.value.trim(),
     email: form.email.value.trim(),
-    majorid: form.majorid.value.trim(),
-    enrollyear: form.enrollyear.value.trim(),
+    enrollmentyear: form.enrollmentyear.value.trim()
   };
 
   fetch("/api/students", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(newStudent),
+    body: JSON.stringify(student),
   })
     .then(res => {
       if (!res.ok) throw new Error("Failed to add student");
@@ -94,12 +90,10 @@ function handleModifyStudent(e) {
   e.preventDefault();
   const form = e.target;
 
-  const updatedStudent = {
-    fname: form.fname.value.trim(),
-    lname: form.lname.value.trim(),
+  const student = {
+    name: form.name.value.trim(),
     email: form.email.value.trim(),
-    majorid: form.majorid.value.trim(),
-    enrollyear: form.enrollyear.value.trim(),
+    enrollmentyear: form.enrollmentyear.value.trim()
   };
 
   const id = form.id.value;
@@ -107,7 +101,7 @@ function handleModifyStudent(e) {
   fetch(`/api/students/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedStudent),
+    body: JSON.stringify(student),
   })
     .then(res => {
       if (!res.ok) throw new Error("Failed to update student");
@@ -137,11 +131,9 @@ function openModifyModal(student) {
   const form = document.getElementById("modify-form");
 
   form.id.value = student[0];
-  form.fname.value = student[1];
-  form.lname.value = student[2];
-  form.email.value = student[3];
-  form.majorid.value = student[4];
-  form.enrollyear.value = student[5];
+  form.email.value = student[1];
+  form.name.value = student[2];
+  form.enrollmentyear.value = student[3];
 
   modal.style.display = "block";
   overlay.style.display = "block";

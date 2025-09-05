@@ -6,7 +6,7 @@
   <title>Students</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body data-page = "students">
+<body data-page="students">
   <div class="banner">
     <a href="/">Home</a>
   </div>
@@ -20,17 +20,15 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
+          <th>Name</th>
           <th>Email</th>
-          <th>Major ID</th>
-          <th>Enroll Year</th>
+          <th>Enrollment Year</th>
           <th>Actions</th>
         </tr>
       </thead>
 
       <tbody>
-        <!-- fill in rows -->
+        <!-- Rows populated by JS -->
       </tbody>
     </table>
   </div>
@@ -41,24 +39,16 @@
     <h3>Add New Student</h3>
     <form id="add-form">
       <label>
-        First Name:<br />
-        <input type="text" name="fname" required />
-      </label><br /><br />
-      <label>
-        Last Name:<br />
-        <input type="text" name="lname" required />
+        Name:<br />
+        <input type="text" name="name" required />
       </label><br /><br />
       <label>
         Email:<br />
         <input type="email" name="email" required />
       </label><br /><br />
       <label>
-        Major ID:<br />
-        <input type="text" name="majorid" />
-      </label><br /><br />
-      <label>
         Enrollment Year:<br />
-        <input type="number" name="enrollyear" required min="1900" max="2100" />
+        <input type="number" name="enrollmentyear" required min="1900" max="2100" />
       </label><br /><br />
       <button type="submit">Add Student</button>
       <button type="button" id="cancel-btn">Cancel</button>
@@ -72,24 +62,16 @@
     <form id="modify-form">
       <input type="hidden" name="id" />
       <label>
-        First Name:<br />
-        <input type="text" name="fname" required />
-      </label><br /><br />
-      <label>
-        Last Name:<br />
-        <input type="text" name="lname" required />
+        Name:<br />
+        <input type="text" name="name" required />
       </label><br /><br />
       <label>
         Email:<br />
         <input type="email" name="email" required />
       </label><br /><br />
       <label>
-        Major ID:<br />
-        <input type="text" name="majorid" />
-      </label><br /><br />
-      <label>
         Enrollment Year:<br />
-        <input type="number" name="enrollyear" required min="1900" max="2100" />
+        <input type="number" name="enrollmentyear" required min="1900" max="2100" />
       </label><br /><br />
       <button type="submit">Save Changes</button>
       <button type="button" id="modify-cancel-btn">Cancel</button>

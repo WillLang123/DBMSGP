@@ -8,43 +8,34 @@ def quickOpen():
 def quickClose(cursor, connection):
     cursor.close()
     connection.close()
-#quickly opens and closes sqlite3 cursors
 
 def dbstartup():
     cursor, conn = quickOpen()
+
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Majors (
+    CREATE TABLE IF NOT EXISTS Departments (
         id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL
+        name TEXT NOT NULL,
+        code TEXT NOT NULL
     );
     """)
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Subjects (
+    CREATE TABLE IF NOT EXISTS Professors (
         id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL
-    );
-    """)
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Teachers (
-        id INTEGER PRIMARY KEY,
-        fname TEXT NOT NULL,
-        lname TEXT NOT NULL,
+        name TEXT NOT NULL,
         email TEXT NOT NULL,
-        password TEXT NOT NULL
+        departmentid INTEGER,
+        FOREIGN KEY (departmentid) REFERENCES Departments(id)
     );
     """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Students (
         id INTEGER PRIMARY KEY,
-        fname TEXT NOT NULL,
-        lname TEXT NOT NULL,
         email TEXT NOT NULL,
-        majorid INTEGER,
-        enrollyear INTEGER NOT NULL,
-        FOREIGN KEY (majorid) REFERENCES Majors(id)
+        name TEXT NOT NULL,
+        enrollmentyear INTEGER NOT NULL
     );
     """)
 
@@ -53,11 +44,21 @@ def dbstartup():
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         code TEXT NOT NULL,
-        teacherid INTEGER,
-        subjectid INTEGER,
         credits INTEGER NOT NULL,
-        FOREIGN KEY (teacherid) REFERENCES Teachers(id),
-        FOREIGN KEY (subjectid) REFERENCES Subjects(id)
+        description TEXT,
+        departmentid INTEGER,
+        FOREIGN KEY (departmentid) REFERENCES Departments(id)
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Sections (
+        id INTEGER PRIMARY KEY,
+        professorid INTEGER NOT NULL,
+        courseid INTEGER NOT NULL,
+        schedule TEXT,
+        FOREIGN KEY (professorid) REFERENCES Professors(id),
+        FOREIGN KEY (courseid) REFERENCES Courses(id)
     );
     """)
 
@@ -65,66 +66,71 @@ def dbstartup():
     CREATE TABLE IF NOT EXISTS Enrollments (
         id INTEGER PRIMARY KEY,
         studentid INTEGER NOT NULL,
-        courseid INTEGER NOT NULL,
-        enrollyear INTERGER NOT NULL,
+        sectionid INTEGER NOT NULL,
         grade TEXT NOT NULL,
         FOREIGN KEY (studentid) REFERENCES Students(id),
-        FOREIGN KEY (courseid) REFERENCES Courses(id)
+        FOREIGN KEY (sectionid) REFERENCES Sections(id)
     );
     """)
 
     conn.commit()
     quickClose(cursor, conn)
-    print("Schema made")
+    print("Schema created.")
 
 def unpopulateDB():
     cursor, conn = quickOpen()
-    cursor.execute("""DELETE from Students""")
-    cursor.execute("""DELETE from Teachers""")
-    cursor.execute("""DELETE from Courses""")
-    cursor.execute("""DELETE from Enrollments""")
-    cursor.execute("""DELETE from Majors""")
-    cursor.execute("""DELETE from Subjects""")
+    cursor.execute("DELETE FROM Enrollments")
+    cursor.execute("DELETE FROM Sections")
+    cursor.execute("DELETE FROM Students")
+    cursor.execute("DELETE FROM Professors")
+    cursor.execute("DELETE FROM Courses")
+    cursor.execute("DELETE FROM Departments")
     conn.commit()
     quickClose(cursor, conn)
-    print("DB Cleaned")
+    print("DB cleaned.")
 
 def populateDB():
     cursor, conn = quickOpen()
+
     for i in range(1, 10):
-        fname = f"Test{i}"
-        lname = f"Test{i}"
-        email = f"Test{i}@lamar.edu"
         name = f"Test{i}"
-        password = f"Test{i}"
-        enrollyear = 2000+i
-        code = f"Test{i}"
-        #enrolldate = None
-        grade = f"A"
+        email = f"test{i}@lamar.edu"
+        code = f"COSC{i}"
+        credits = i
+        schedule = f"Mon/Wed {i}:00AM - {i}:15AM"
+        enrollmentyear = 2000 + i
+        grade = "A"
+
         cursor.execute("""
-            INSERT INTO Majors (id, name)
-            VALUES (?, ?)
-        """, (i, name))
+            INSERT INTO Departments (id, name, code)
+            VALUES (?, ?, ?)
+        """, (i, name, code))
+
         cursor.execute("""
-            INSERT INTO Subjects (id, name)
-            VALUES (?, ?)
-        """, (i, name))
+            INSERT INTO Professors (id, name, email, departmentid)
+            VALUES (?, ?, ?, ?)
+        """, (i, name, email, i))
+
         cursor.execute("""
-            INSERT INTO Teachers (id, fname, lname, email, password)
-            VALUES (?, ?, ?, ?, ?)
-        """, (i, fname, lname, email, password))
+            INSERT INTO Students (id, email, name, enrollmentyear)
+            VALUES (?, ?, ?, ?)
+        """, (i, email, name, enrollmentyear))
+
         cursor.execute("""
-            INSERT INTO Students (id, fname, lname, email, majorid, enrollyear)
+            INSERT INTO Courses (id, name, code, credits, description, departmentid)
             VALUES (?, ?, ?, ?, ?, ?)
-        """, (i, fname, lname, email, i, enrollyear))
+        """, (i, name, code, credits, f"Description for {name}", i))
+
         cursor.execute("""
-            INSERT INTO Courses (id, name, code, teacherid, subjectid, credits)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (i, name, code, i, i, i))
+            INSERT INTO Sections (id, professorid, courseid, schedule)
+            VALUES (?, ?, ?, ?)
+        """, (i, i, i, schedule))
+
         cursor.execute("""
-            INSERT INTO Enrollments (id, studentid, courseid, enrolldate, grade)
-            VALUES (?, ?, ?, ?, ?)
-        """, (i, i, i, enrollyear ,grade))
+            INSERT INTO Enrollments (id, studentid, sectionid, grade)
+            VALUES (?, ?, ?, ?)
+        """, (i, i, i, grade))
+
     conn.commit()
     quickClose(cursor, conn)
-    print("DB popped")
+    print("DB populated.")
