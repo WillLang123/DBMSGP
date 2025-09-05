@@ -26,6 +26,7 @@ def getstudents():
     quickClose(cursor, conn)
     return jsonify(data)
 
+#adds student from api json
 @app.route("/api/students", methods=["POST"]) 
 def addstudent():
     cursor, conn = quickOpen()
@@ -47,6 +48,7 @@ def addstudent():
         quickClose(cursor, conn)
         return jsonify({"error": str(e)}), 400
 
+#updates student entry based on restful url /id and json
 @app.route("/api/students/<int:id>", methods=["PUT"])
 def modifystudent(id):
     cursor, conn = quickOpen()
@@ -70,13 +72,13 @@ def modifystudent(id):
         quickClose(cursor, conn)
         return jsonify({"error": str(e)}), 400
 
+#deletes students and enrollments with student based off /id and json
 @app.route("/api/students/<int:id>", methods=["DELETE"])
 def deletestudent(id):
     cursor, conn = quickOpen()
     try:
         cursor.execute("DELETE FROM Enrollments WHERE studentid = ?", (id,))
         cursor.execute("DELETE FROM Students WHERE id = ?", (id,))
-        #TODO remove all student enrollments
         conn.commit()
         quickClose(cursor, conn)
         return jsonify({"status": "success"}), 200
@@ -84,29 +86,6 @@ def deletestudent(id):
     except Exception as e:
         quickClose(cursor, conn)
         return jsonify({"error": str(e)}), 400
-
-# FOR ANY API CALL
-# dataFromAPI = request.get_json()
-# name = dataFromAPI.get('name')
-# cursor, conn = quickCursor()
-# cursor.execute();
-# result = cursor.fetchone()
-# cursor.commit();
-# curso.rollback();
-# output = jsonify({"words": "Blah blag"})
-# return output #so API knows what happened with transaction
-
-# Use this for Major delete/ subject delete:
-#cursor.execute("SELECT COUNT(*) FROM Students WHERE majorid = ?", (id))
-#        count = cursor.fetchone()[0]
-#        if count > 0:
-#            quickClose(cursor, conn)
-#            return jsonify({"error": str(e)}), 400
-#        else:
-#            cursor.execute("DELETE FROM Students WHERE id = ?", (id))
-#            conn.commit()
-#            quickClose(cursor, conn)
-#            return jsonify({"status": "deleted"}), 200
 
 cursor, conn = quickOpen()
 try:

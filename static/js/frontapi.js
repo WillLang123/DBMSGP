@@ -25,7 +25,7 @@ async function fetchData() {
     const res = await fetch("/get/students");
     studentsData = await res.json();
   } catch (err) {
-    console.error("Error loading students:", err);
+    console.error("Error loading data:", err);
     studentsData = [];
   }
 }
@@ -125,33 +125,3 @@ function handleDeleteStudent(id) {
     .catch(err => alert(err.message));
 }
 
-function openModifyModal(student) {
-  const modal = document.getElementById("modify-modal");
-  const overlay = document.getElementById("modify-overlay");
-  const form = document.getElementById("modify-form");
-
-  form.id.value = student[0];
-  form.email.value = student[1];
-  form.name.value = student[2];
-  form.enrollmentyear.value = student[3];
-
-  modal.style.display = "block";
-  overlay.style.display = "block";
-}
-
-function closeModifyModal() {
-  document.getElementById("modify-modal").style.display = "none";
-  document.getElementById("modify-overlay").style.display = "none";
-  document.getElementById("modify-form").reset();
-}
-
-function openAddModal() {
-  document.getElementById("add-modal").style.display = "block";
-  document.getElementById("add-overlay").style.display = "block";
-}
-
-function closeAddModal() {
-  document.getElementById("add-modal").style.display = "none";
-  document.getElementById("add-overlay").style.display = "none";
-  document.getElementById("add-form").reset();
-}

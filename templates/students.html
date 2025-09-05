@@ -7,9 +7,15 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body data-page="students">
-  <div class="banner">
-    <a href="/">Home</a>
-  </div>
+      <div class="banner">
+        <a href="/">Home</a>
+        <a href="/departments">Departments</a>
+        <a href="/professors">Professors</a>
+        <a href="/students">Students</a>
+        <a href="/courses">Courses</a>
+        <a href="/sections">Sections</a>
+        <a href="/enrollments">Enrollments</a>
+    </div>
 
   <div class="container">
     <h2>Students Table</h2>
@@ -77,7 +83,38 @@
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
   </div>
+  <script>
+    function openModifyModal(student) {
+      const modal = document.getElementById("modify-modal");
+      const overlay = document.getElementById("modify-overlay");
+      const form = document.getElementById("modify-form");
 
+      form.id.value = student[0];
+      form.email.value = student[1];
+      form.name.value = student[2];
+      form.enrollmentyear.value = student[3];
+
+      modal.style.display = "block";
+      overlay.style.display = "block";
+    }
+      
+    function closeModifyModal() {
+      document.getElementById("modify-modal").style.display = "none";
+      document.getElementById("modify-overlay").style.display = "none";
+      document.getElementById("modify-form").reset();
+    }
+
+    function openAddModal() {
+      document.getElementById("add-modal").style.display = "block";
+      document.getElementById("add-overlay").style.display = "block";
+    }
+
+    function closeAddModal() {
+      document.getElementById("add-modal").style.display = "none";
+      document.getElementById("add-overlay").style.display = "none";
+      document.getElementById("add-form").reset();
+    }
+  </script>
   <script src="{{ url_for('static', filename='js/frontapi.js') }}"></script>
 </body>
 </html>
