@@ -92,7 +92,7 @@ def unpopulateDB():
 def populateDB():
     cursor, conn = quickOpen()
 
-    for i in range(1, 10):
+    for i in range(1, 11):
         name = f"Test{i}"
         email = f"test{i}@lamar.edu"
         code = f"COSC{i}"

@@ -5,17 +5,29 @@ let coursesData = [];
 let sectionsData = [];
 let enrollmentsData = [];
 
-let studentSortState = { column: null, ascending: true };
-let studentSearchTerm = "";
+let studentStates = { col: null, asc: true };
+let studentSearch = "";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async function () {
   await fetchData();
 
   const page = document.body.dataset.page;
 
   if (page === "students") {
-    setupSearch();
-    setupSorting();
+    setupSearch({
+      onSearch: function (term) {
+        studentSearch = term;
+        renderStudentTable();
+      },
+      selector: "#search-input"
+    });
+
+    setupSorting({
+      state: studentStates,
+      onSort: renderStudentTable,
+      selector: ".sort-btn"
+    });
+
     renderStudentTable();
 
     document.getElementById("add-btn")?.addEventListener("click", openAddModal);
@@ -30,8 +42,8 @@ async function fetchData() {
   try {
     const res = await fetch("/get/students");
     studentsData = await res.json();
-  } catch (err) {
-    console.error("Error loading data:", err);
+  } catch (error) {
+    console.error("Error loading data:", error);
     studentsData = [];
   }
 }
@@ -40,44 +52,52 @@ function renderStudentTable() {
   const tbody = document.querySelector("#data-table tbody");
   tbody.innerHTML = "";
 
-  const filtered = studentsData.filter(student =>
-    student.some(value =>
-      String(value).toLowerCase().includes(studentSearchTerm.toLowerCase())
-    )
-  );
+  const filtered = studentsData.filter(function (student) {
+    return student.some(function (value) {
+      return String(value).toLowerCase().includes(studentSearch);
+    });
+  });
 
-  const sorted = sortStudentsData(filtered);
+  const sorted = sortTableData(filtered, studentStates);
 
-  sorted.forEach(student => {
-    tbody.appendChild(createRow(student));
+  sorted.forEach(function (student) {
+    tbody.appendChild(createRow(student, openModifyModal, handleDeleteStudent));
   });
 }
 
-function createRow(student) {
+function createRow(data, onModify, onDelete) {
   const row = document.createElement("tr");
+  const id = data[0];
 
-  const [id, email, name, enrollmentyear] = student;
+  let cells = "";
+  data.forEach(function (value, i) {
+    cells += i === 0
+      ? "<td>" + value + "</td>"
+      : "<td contenteditable>" + value + "</td>";
+  });
 
-  row.innerHTML = `
-    <td>${id}</td>
-    <td contenteditable>${name}</td>
-    <td contenteditable>${email}</td>
-    <td contenteditable>${enrollmentyear}</td>
+  row.innerHTML =
+    cells +
+    `
     <td>
       <button class="modify-btn">Modify</button>
       <button class="delete-btn">Delete</button>
     </td>
   `;
 
-  row.querySelector(".modify-btn").addEventListener("click", () => openModifyModal(student));
-  row.querySelector(".delete-btn").addEventListener("click", () => handleDeleteStudent(id));
+  row.querySelector(".modify-btn").addEventListener("click", function () {
+    onModify(data);
+  });
+  row.querySelector(".delete-btn").addEventListener("click", function () {
+    onDelete(id);
+  });
 
   return row;
 }
 
-function handleAddStudent(e) {
-  e.preventDefault();
-  const form = e.target;
+function handleAddStudent(event) {
+  event.preventDefault();
+  const form = event.target;
 
   const student = {
     name: form.name.value.trim(),
@@ -88,22 +108,24 @@ function handleAddStudent(e) {
   fetch("/api/students", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(student),
+    body: JSON.stringify(student)
   })
-    .then(res => {
+    .then(function (res) {
       if (!res.ok) throw new Error("Failed to add student");
       return res.json();
     })
-    .then(() => {
+    .then(function () {
       closeAddModal();
       location.reload();
     })
-    .catch(err => alert(err.message));
+    .catch(function (error) {
+      alert(error.message);
+    });
 }
 
-function handleModifyStudent(e) {
-  e.preventDefault();
-  const form = e.target;
+function handleModifyStudent(event) {
+  event.preventDefault();
+  const form = event.target;
 
   const student = {
     name: form.name.value.trim(),
@@ -113,82 +135,98 @@ function handleModifyStudent(e) {
 
   const id = form.id.value;
 
-  fetch(`/api/students/${id}`, {
+  fetch("/api/students/" + id, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(student),
+    body: JSON.stringify(student)
   })
-    .then(res => {
+    .then(function (res) {
       if (!res.ok) throw new Error("Failed to update student");
       return res.json();
     })
-    .then(() => {
+    .then(function () {
       closeModifyModal();
       location.reload();
     })
-    .catch(err => alert(err.message));
+    .catch(function (error) {
+      alert(error.message);
+    });
 }
 
 function handleDeleteStudent(id) {
   if (!confirm("Delete this student? This will remove their enrollments too.")) return;
 
-  fetch(`/api/students/${id}`, { method: "DELETE" })
-    .then(res => {
+  fetch("/api/students/" + id, { method: "DELETE" })
+    .then(function (res) {
       if (!res.ok) throw new Error("Failed to delete student");
       location.reload();
     })
-    .catch(err => alert(err.message));
+    .catch(function (error) {
+      alert(error.message);
+    });
 }
 
-function setupSorting() {
-  document.querySelectorAll(".sort-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const column = parseInt(btn.dataset.key);
-      if (studentSortState.column === column) {
-        studentSortState.ascending = !studentSortState.ascending;
+function setupSorting(options) {
+  const state = options.state;
+  const onSort = options.onSort;
+  const selector = options.selector || ".sort-btn";
+
+  document.querySelectorAll(selector).forEach(function (button) {
+    button.addEventListener("click", function () {
+      const colNum = parseInt(this.getAttribute("data-key"));
+
+      if (state.col === colNum) {
+        state.asc = !state.asc;
       } else {
-        studentSortState.column = column;
-        studentSortState.ascending = true;
+        state.col = colNum;
+        state.asc = true;
       }
 
-      updateSortIcons();
-      renderStudentTable();
+      updateSortIcons(state, selector);
+      onSort();
     });
   });
 }
 
-function sortStudentsData(data) {
-  if (studentSortState.column === null) return data;
+function sortTableData(data, state) {
+  if (state.col === null) return data;
 
-  return [...data].sort((a, b) => {
-    const valA = a[studentSortState.column];
-    const valB = b[studentSortState.column];
+  const col = state.col;
+  const asc = state.asc;
 
-    if (typeof valA === "number" && typeof valB === "number") {
-      return studentSortState.ascending ? valA - valB : valB - valA;
+  return data.slice().sort(function (a, b) {
+    const A = a[col];
+    const B = b[col];
+
+    if (typeof A === "number" && typeof B === "number") {
+      return asc ? A - B : B - A;
     }
 
-    return studentSortState.ascending
-      ? String(valA).localeCompare(String(valB))
-      : String(valB).localeCompare(String(valA));
+    const textA = String(A).toLowerCase();
+    const textB = String(B).toLowerCase();
+
+    if (textA < textB) return asc ? -1 : 1;
+    if (textA > textB) return asc ? 1 : -1;
+    return 0;
   });
 }
 
-function updateSortIcons() {
-  document.querySelectorAll(".sort-btn").forEach(btn => {
-    const column = parseInt(btn.dataset.key);
-    btn.textContent = studentSortState.column === column
-      ? (studentSortState.ascending ? "↑" : "↓")
-      : "↓";
+function updateSortIcons(state, selector) {
+  const buttons = document.querySelectorAll(selector);
+  buttons.forEach(function (button) {
+    const colNum = parseInt(button.getAttribute("data-key"));
+    button.textContent = state.col === colNum ? (state.asc ? "↑" : "↓") : "↓";
   });
 }
 
-function setupSearch() {
-  const input = document.getElementById("search-input");
+function setupSearch(options) {
+  const onSearch = options.onSearch;
+  const selector = options.selector || "[data-search]";
+  const input = document.querySelector(selector);
   if (!input) return;
 
-  input.addEventListener("input", () => {
-    studentSearchTerm = input.value.trim().toLowerCase();
-    renderStudentTable();
+  input.addEventListener("input", function () {
+    const term = input.value.trim().toLowerCase();
+    onSearch(term);
   });
 }
