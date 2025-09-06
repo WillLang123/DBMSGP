@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     renderStudentTable();
 
-    document.getElementById("add-btn")?.addEventListener("click", openAddModal);
-    document.getElementById("cancel-btn")?.addEventListener("click", closeAddModal);
-    document.getElementById("add-form")?.addEventListener("submit", handleAddStudent);
-    document.getElementById("modify-form")?.addEventListener("submit", handleModifyStudent);
-    document.getElementById("modify-cancel-btn")?.addEventListener("click", closeModifyModal);
+    document.getElementById("add-btn").addEventListener("click", openAddModal);
+    document.getElementById("cancel-btn").addEventListener("click", closeAddModal);
+    document.getElementById("add-form").addEventListener("submit", handleAddStudent);
+    document.getElementById("modify-form").addEventListener("submit", handleModifyStudent);
+    document.getElementById("modify-cancel-btn").addEventListener("click", closeModifyModal);
   }
 });
 
