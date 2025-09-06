@@ -92,6 +92,77 @@
   </div>
 
   <script>
+    function handleAddStudent(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const student = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        enrollmentyear: form.enrollmentyear.value.trim()
+      };
+
+      fetch("/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("Failed to add student");
+          return res.json();
+        })
+        .then(function () {
+          closeAddModal();
+          location.reload();
+        })
+        .catch(function (error) {
+          alert(error.message);
+        });
+    }
+
+    function handleModifyStudent(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const student = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        enrollmentyear: form.enrollmentyear.value.trim()
+      };
+
+      const id = form.id.value;
+
+      fetch("/api/students/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("Failed to update student");
+          return res.json();
+        })
+        .then(function () {
+          closeModifyModal();
+          location.reload();
+        })
+        .catch(function (error) {
+          alert(error.message);
+        });
+    }
+
+    function handleDeleteStudent(id) {
+      if (!confirm("Delete this student? This will remove their enrollments too.")) return;
+
+      fetch("/api/students/" + id, { method: "DELETE" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("Failed to delete student");
+          location.reload();
+        })
+        .catch(function (error) {
+          alert(error.message);
+        });
+    }
+    
     function openModifyModal(student) {
       const modal = document.getElementById("modify-modal");
       const overlay = document.getElementById("modify-overlay");
