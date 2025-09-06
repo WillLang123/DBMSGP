@@ -92,32 +92,32 @@ input[type="text"] {
     box-sizing: border-box;
 }
 
-#overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 100;
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 }
 
 .modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 600px;
-    max-width: 95vw;
-    background: #fff;
-    padding: 12px 24px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translate(-50%, -50%);
-    z-index: 101;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  max-width: 95vw;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
 }
 
 .modal h3 {
