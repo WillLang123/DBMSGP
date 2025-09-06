@@ -5,13 +5,19 @@ let coursesData = [];
 let sectionsData = [];
 let enrollmentsData = [];
 
+let studentSortState = { column: null, ascending: true };
+let studentSearchTerm = "";
+
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchData();
 
   const page = document.body.dataset.page;
 
   if (page === "students") {
-    manageStudents();
+    setupSearch();
+    setupSorting();
+    renderStudentTable();
+
     document.getElementById("add-btn")?.addEventListener("click", openAddModal);
     document.getElementById("cancel-btn")?.addEventListener("click", closeAddModal);
     document.getElementById("add-form")?.addEventListener("submit", handleAddStudent);
@@ -30,10 +36,19 @@ async function fetchData() {
   }
 }
 
-function manageStudents() {
+function renderStudentTable() {
   const tbody = document.querySelector("#data-table tbody");
   tbody.innerHTML = "";
-  studentsData.forEach(student => {
+
+  const filtered = studentsData.filter(student =>
+    student.some(value =>
+      String(value).toLowerCase().includes(studentSearchTerm.toLowerCase())
+    )
+  );
+
+  const sorted = sortStudentsData(filtered);
+
+  sorted.forEach(student => {
     tbody.appendChild(createRow(student));
   });
 }
@@ -125,3 +140,55 @@ function handleDeleteStudent(id) {
     .catch(err => alert(err.message));
 }
 
+function setupSorting() {
+  document.querySelectorAll(".sort-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const column = parseInt(btn.dataset.key);
+      if (studentSortState.column === column) {
+        studentSortState.ascending = !studentSortState.ascending;
+      } else {
+        studentSortState.column = column;
+        studentSortState.ascending = true;
+      }
+
+      updateSortIcons();
+      renderStudentTable();
+    });
+  });
+}
+
+function sortStudentsData(data) {
+  if (studentSortState.column === null) return data;
+
+  return [...data].sort((a, b) => {
+    const valA = a[studentSortState.column];
+    const valB = b[studentSortState.column];
+
+    if (typeof valA === "number" && typeof valB === "number") {
+      return studentSortState.ascending ? valA - valB : valB - valA;
+    }
+
+    return studentSortState.ascending
+      ? String(valA).localeCompare(String(valB))
+      : String(valB).localeCompare(String(valA));
+  });
+}
+
+function updateSortIcons() {
+  document.querySelectorAll(".sort-btn").forEach(btn => {
+    const column = parseInt(btn.dataset.key);
+    btn.textContent = studentSortState.column === column
+      ? (studentSortState.ascending ? "↑" : "↓")
+      : "↓";
+  });
+}
+
+function setupSearch() {
+  const input = document.getElementById("search-input");
+  if (!input) return;
+
+  input.addEventListener("input", () => {
+    studentSearchTerm = input.value.trim().toLowerCase();
+    renderStudentTable();
+  });
+}

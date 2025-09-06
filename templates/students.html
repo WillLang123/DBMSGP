@@ -7,28 +7,35 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body data-page="students">
-      <div class="banner">
-        <a href="/">Home</a>
-        <a href="/departments">Departments</a>
-        <a href="/professors">Professors</a>
-        <a href="/students">Students</a>
-        <a href="/courses">Courses</a>
-        <a href="/sections">Sections</a>
-        <a href="/enrollments">Enrollments</a>
-    </div>
+  <div class="banner">
+    <a href="/">Home</a>
+    <a href="/departments">Departments</a>
+    <a href="/professors">Professors</a>
+    <a href="/students">Students</a>
+    <a href="/courses">Courses</a>
+    <a href="/sections">Sections</a>
+    <a href="/enrollments">Enrollments</a>
+  </div>
 
   <div class="container">
     <h2>Students Table</h2>
 
-    <button id="add-btn" class="add">Add</button>
+    <div class="top-controls">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="Search students...">
+      </div>
+      <div class="add-btn-wrapper">
+        <button id="add-btn" class="add">Add</button>
+      </div>
+    </div>
 
     <table id="data-table">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Enrollment Year</th>
+          <th>ID <button class="sort-btn" data-key="0" data-order="asc">↑</button></th>
+          <th>Name <button class="sort-btn" data-key="2" data-order="asc">↑</button></th>
+          <th>Email <button class="sort-btn" data-key="1" data-order="asc">↑</button></th>
+          <th>Enrollment Year <button class="sort-btn" data-key="3" data-order="asc">↑</button></th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -83,6 +90,7 @@
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
   </div>
+
   <script>
     function openModifyModal(student) {
       const modal = document.getElementById("modify-modal");
@@ -97,7 +105,7 @@
       modal.style.display = "block";
       overlay.style.display = "block";
     }
-      
+
     function closeModifyModal() {
       document.getElementById("modify-modal").style.display = "none";
       document.getElementById("modify-overlay").style.display = "none";

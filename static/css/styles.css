@@ -34,6 +34,7 @@ body {
     display: flex;
     justify-content: flex-end;
     margin: 10px 0;
+    width: 100%;
 }
 
 button {
@@ -74,14 +75,15 @@ th {
     background-color: #444444;
     color: white;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #d9d9d9;
 }
 
 tr:nth-child(odd) {
-    background-color: #ffffff;
+    background-color: #f9f9f9;
 }
 
 input[type="text"] {
@@ -194,4 +196,32 @@ input[type="text"] {
         width: 90vw;
         padding: 15px 20px;
     }
+}
+
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+#search-input {
+    width: 400px;
+    padding: 8px 12px;
+    font-size: 1rem;
+}
+
+.sort-btn {
+    font-size: 0.75rem;
+    margin-left: 6px;
+    padding: 2px 4px;
+    float: right;
 }
