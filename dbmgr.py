@@ -16,7 +16,7 @@ def dbstartup():
     CREATE TABLE IF NOT EXISTS Departments (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        code TEXT NOT NULL
+        code TEXT NOT NULL UNIQUE
     );
     """)
 
@@ -43,7 +43,7 @@ def dbstartup():
     CREATE TABLE IF NOT EXISTS Courses (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        code TEXT NOT NULL,
+        code TEXT NOT NULL UNIQUE,
         credits INTEGER NOT NULL,
         description TEXT,
         departmentid INTEGER,
