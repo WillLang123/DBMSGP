@@ -68,6 +68,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     renderTable(professorsData, professorStates, professorSearch, openModifyModal, handleDeleteProfessor);
+
+    document.getElementById("add-btn").addEventListener("click", openAddModal);
+    document.getElementById("cancel-btn").addEventListener("click", closeAddModal);
+    document.getElementById("add-form").addEventListener("submit", handleAddProfessor);
+    document.getElementById("modify-form").addEventListener("submit", handleModifyProfessor);
+    document.getElementById("modify-cancel-btn").addEventListener("click", closeModifyModal);
   }
 
   if (page === "departments") {
@@ -88,6 +94,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     renderTable(departmentsData, departmentStates, departmentSearch, openModifyModal, handleDeleteDepartment);
+
+    document.getElementById("add-btn").addEventListener("click", openAddModal);
+    document.getElementById("cancel-btn").addEventListener("click", closeAddModal);
+    document.getElementById("add-form").addEventListener("submit", handleAddDepartment);
+    document.getElementById("modify-form").addEventListener("submit", handleModifyDepartment);
+    document.getElementById("modify-cancel-btn").addEventListener("click", closeModifyModal);
   }
 
   if (page === "courses") {
@@ -108,6 +120,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     renderTable(coursesData, courseStates, courseSearch, openModifyModal, handleDeleteCourse);
+
+    document.getElementById("add-btn").addEventListener("click", openAddModal);
+    document.getElementById("cancel-btn").addEventListener("click", closeAddModal);
+    document.getElementById("add-form").addEventListener("submit", handleAddCourse);
+    document.getElementById("modify-form").addEventListener("submit", handleModifyCourse);
+    document.getElementById("modify-cancel-btn").addEventListener("click", closeModifyModal);
   }
 
   if (page === "sections") {
@@ -128,6 +146,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     renderTable(sectionsData, sectionStates, sectionSearch, openModifyModal, handleDeleteSection);
+
+    document.getElementById("add-btn").addEventListener("click", openAddModal);
+    document.getElementById("cancel-btn").addEventListener("click", closeAddModal);
+    document.getElementById("add-form").addEventListener("submit", handleAddSection);
+    document.getElementById("modify-form").addEventListener("submit", handleModifySection);
+    document.getElementById("modify-cancel-btn").addEventListener("click", closeModifyModal);
   }
 
   if (page === "enrollments") {
@@ -148,6 +172,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     renderTable(enrollmentsData, enrollmentStates, enrollmentSearch, openModifyModal, handleDeleteEnrollment);
+
+    document.getElementById("add-btn").addEventListener("click", openAddModal);
+    document.getElementById("cancel-btn").addEventListener("click", closeAddModal);
+    document.getElementById("add-form").addEventListener("submit", handleAddEnrollment);
+    document.getElementById("modify-form").addEventListener("submit", handleModifyEnrollment);
+    document.getElementById("modify-cancel-btn").addEventListener("click", closeModifyModal);
   }
 });
 
