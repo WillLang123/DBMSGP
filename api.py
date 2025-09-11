@@ -107,7 +107,7 @@ def deletestudent(id):
 
 #Department Methods
 
-@app.route("/api/departments", methods=["GET"])
+@app.route("/get/departments", methods=["GET"])
 def getdepartments():
     cursor, conn = quickOpen()
     cursor.execute("SELECT * FROM Departments")
@@ -151,7 +151,6 @@ def deletedepartment(id):
     cursor, conn = quickOpen()
     try:
         cursor.execute("DELETE FROM Departments WHERE id = ?", (id,))
-
         conn.commit()
         quickClose(cursor, conn)
         return jsonify({"status": "success"}), 200
@@ -161,7 +160,7 @@ def deletedepartment(id):
 
 #Professor Methods
 
-@app.route("/api/professors", methods=["GET"])
+@app.route("/get/professors", methods=["GET"])
 def getprofessors():
     cursor, conn = quickOpen()
     cursor.execute("SELECT * FROM Professors")
@@ -206,7 +205,6 @@ def deleteprofessor(id):
     cursor, conn = quickOpen()
     try:
         cursor.execute("DELETE FROM Professors WHERE id = ?", (id,))
-
         conn.commit()
         quickClose(cursor, conn)
         return jsonify({"status": "success"}), 200
@@ -216,7 +214,7 @@ def deleteprofessor(id):
 
 #Course functions
 
-@app.route("/api/courses", methods=["GET"])
+@app.route("/get/courses", methods=["GET"])
 def getcourses():
     cursor, conn = quickOpen()
     cursor.execute("SELECT * FROM Courses")
@@ -276,7 +274,7 @@ def deletecourse(id):
 
 #Section methods
 
-@app.route("/api/sections", methods=["GET"])
+@app.route("/get/sections", methods=["GET"])
 def getsections():
     cursor, conn = quickOpen()
     cursor.execute("SELECT * FROM Sections")
@@ -293,8 +291,7 @@ def addsection():
             INSERT INTO Sections (professorid, courseid, schedule)
             VALUES (?, ?, ?)
         """, (
-            int(data["professorid"]), int
-(data["courseid"]), data["schedule"]
+            int(data["professorid"]), int(data["courseid"]), data["schedule"]
         ))
         conn.commit()
         quickClose(cursor, conn)
@@ -328,7 +325,6 @@ def deletesection(id):
     cursor, conn = quickOpen()
     try:
         cursor.execute("DELETE FROM Sections WHERE id = ?", (id,))
-
         conn.commit()
         quickClose(cursor, conn)
         return jsonify({"status": "success"}), 200
@@ -338,7 +334,7 @@ def deletesection(id):
 
 #Enrollment functions
 
-@app.route("/api/enrollments", methods=["GET"])
+@app.route("/get/enrollments", methods=["GET"])
 def getenrollments():
     cursor, conn = quickOpen()
     cursor.execute("SELECT * FROM Enrollments")
