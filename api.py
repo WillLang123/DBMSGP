@@ -16,6 +16,26 @@ def index():
 def students():
     return render_template("students.html")
 
+@app.route("/professors")
+def professors():
+    return render_template("professors.html")
+
+@app.route("/departments")
+def departments():
+    return render_template("departments.html")
+
+@app.route("/courses")
+def courses():
+    return render_template("courses.html")
+
+@app.route("/sections")
+def sections():
+    return render_template("sections.html")
+
+@app.route("/enrollments")
+def enrollments():
+    return render_template("enrollments.html")
+
 #Sends list of tuples to frontend
 @app.route("/get/students", methods=["GET"])
 def getstudents():

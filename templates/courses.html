@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courses</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body data-page="courses">
+  <div class="banner">
+    <a href="/">Home</a>
+    <a href="/departments">Departments</a>
+    <a href="/professors">Professors</a>
+    <a href="/students">Students</a>
+    <a href="/courses">Courses</a>
+    <a href="/sections">Sections</a>
+    <a href="/enrollments">Enrollments</a>
+  </div>
+
+  <div class="container">
+    <h2>Courses Table</h2>
+
+    <div class="top-controls">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="Search courses...">
+      </div>
+      <div class="add-btn-wrapper">
+        <button id="add-btn" class="add">Add</button>
+      </div>
+    </div>
+
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>ID <button class="sort-btn" data-key="0" data-order="asc">↑</button></th>
+          <th>Name <button class="sort-btn" data-key="1" data-order="asc">↑</button></th>
+          <th>Code <button class="sort-btn" data-key="2" data-order="asc">↑</button></th>
+          <th>Credits <button class="sort-btn" data-key="3" data-order="asc">↑</button></th>
+          <th>Description <button class="sort-btn" data-key="4" data-order="asc">↑</button></th>
+          <th>Department ID <button class="sort-btn" data-key="5" data-order="asc">↑</button></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="add-overlay" class="overlay" style="display:none;"></div>
+
+  <div id="add-modal" class="modal" style="display:none;">
+    <h3>Add New Course</h3>
+    <form id="add-form">
+      <label>Name:<br /><input type="text" name="name" required /></label><br /><br />
+      <label>Code:<br /><input type="text" name="code" required /></label><br /><br />
+      <label>Credits:<br /><input type="number" name="credits" required /></label><br /><br />
+      <label>Description:<br /><textarea name="description" required></textarea></label><br /><br />
+      <label>Department ID:<br /><input type="number" name="departmentid" required /></label><br /><br />
+      <button type="submit">Add Course</button>
+      <button type="button" id="cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <div id="modify-overlay" class="overlay" style="display:none;"></div>
+
+  <div id="modify-modal" class="modal" style="display:none;">
+    <h3>Modify Course</h3>
+    <form id="modify-form">
+      <input type="hidden" name="id" />
+      <label>Name:<br /><input type="text" name="name" required /></label><br /><br />
+      <label>Code:<br /><input type="text" name="code" required /></label><br /><br />
+      <label>Credits:<br /><input type="number" name="credits" required /></label><br /><br />
+      <label>Description:<br /><textarea name="description" required></textarea></label><br /><br />
+      <label>Department ID:<br /><input type="number" name="departmentid" required /></label><br /><br />
+      <button type="submit">Save Changes</button>
+      <button type="button" id="modify-cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <script>
+    function handleAddCourse(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const course = {
+        name: form.name.value.trim(),
+        code: form.code.value.trim(),
+        credits: parseInt(form.credits.value),
+        description: form.description.value.trim(),
+        departmentid: parseInt(form.departmentid.value)
+      };
+
+      fetch("/api/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(course)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to add course");
+        return res.json();
+      })
+      .then(() => {
+        closeAddModal();
+        location.reload();
+      })
+      .catch(error => alert(error.message));
+    }
+
+    function handleModifyCourse(event) {
+      event.preventDefault();
+      const form = event.target;
+      const id = form.id.value;
+
+      const course = {
+        name: form.name.value.trim(),
+        code: form.code.value.trim(),
+        credits: parseInt(form.credits.value),
+        description: form.description.value.trim(),
+        departmentid: parseInt(form.departmentid.value)
+      };
+
+      fetch("/api/courses/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(course)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to update course");
+        return res.json();
+      })
+      .then(() => {
+        closeModifyModal();
+        location.reload();
+      })
+      .catch(error => alert(error.message));
+    }
+
+    function handleDeleteCourse(id) {
+      if (!confirm("Delete this course?")) return;
+
+      fetch("/api/courses/" + id, { method: "DELETE" })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to delete course");
+        location.reload();
+      })
+      .catch(error => alert(error.message));
+    }
+
+    function openModifyModal(course) {
+      const form = document.getElementById("modify-form");
+      form.id.value = course[0];
+      form.name.value = course[1];
+      form.code.value = course[2];
+      form.credits.value = course[3];
+      form.description.value = course[4];
+      form.departmentid.value = course[5];
+
+      document.getElementById("modify-modal").style.display = "block";
+      document.getElementById("modify-overlay").style.display = "block";
+    }
+
+    function closeModifyModal() {
+      document.getElementById("modify-modal").style.display = "none";
+      document.getElementById("modify-overlay").style.display = "none";
+      document.getElementById("modify-form").reset();
+    }
+
+    function openAddModal() {
+      document.getElementById("add-modal").style.display = "block";
+      document.getElementById("add-overlay").style.display = "block";
+    }
+
+    function closeAddModal() {
+      document.getElementById("add-modal").style.display = "none";
+      document.getElementById("add-overlay").style.display = "none";
+      document.getElementById("add-form").reset();
+    }
+  </script>
+  <script src="{{ url_for('static', filename='js/frontapi.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Departments</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body data-page="departments">
+  <div class="banner">
+    <a href="/">Home</a>
+    <a href="/departments">Departments</a>
+    <a href="/professors">Professors</a>
+    <a href="/students">Students</a>
+    <a href="/courses">Courses</a>
+    <a href="/sections">Sections</a>
+    <a href="/enrollments">Enrollments</a>
+  </div>
+
+  <div class="container">
+    <h2>Departments Table</h2>
+
+    <div class="top-controls">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="Search departments...">
+      </div>
+      <div class="add-btn-wrapper">
+        <button id="add-btn" class="add">Add</button>
+      </div>
+    </div>
+
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>ID <button class="sort-btn" data-key="0" data-order="asc">↑</button></th>
+          <th>Name <button class="sort-btn" data-key="1" data-order="asc">↑</button></th>
+          <th>Code <button class="sort-btn" data-key="2" data-order="asc">↑</button></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="add-overlay" class="overlay" style="display:none;"></div>
+
+  <div id="add-modal" class="modal" style="display:none;">
+    <h3>Add New Department</h3>
+    <form id="add-form">
+      <label>Name:<br /><input type="text" name="name" required /></label><br /><br />
+      <label>Code:<br /><input type="text" name="code" required /></label><br /><br />
+      <button type="submit">Add Department</button>
+      <button type="button" id="cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <div id="modify-overlay" class="overlay" style="display:none;"></div>
+
+  <div id="modify-modal" class="modal" style="display:none;">
+    <h3>Modify Department</h3>
+    <form id="modify-form">
+      <input type="hidden" name="id" />
+      <label>Name:<br /><input type="text" name="name" required /></label><br /><br />
+      <label>Code:<br /><input type="text" name="code" required /></label><br /><br />
+      <button type="submit">Save Changes</button>
+      <button type="button" id="modify-cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <script>
+    function handleAddDepartment(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const department = {
+        name: form.name.value.trim(),
+        code: form.code.value.trim()
+      };
+
+      fetch("/api/departments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(department)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to add department");
+        return res.json();
+      })
+      .then(() => {
+        closeAddModal();
+        location.reload();
+      })
+      .catch(error => alert(error.message));
+    }
+
+    function handleModifyDepartment(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const department = {
+        name: form.name.value.trim(),
+        code: form.code.value.trim()
+      };
+
+      const id = form.id.value;
+
+      fetch("/api/departments/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(department)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to update department");
+        return res.json();
+      })
+      .then(() => {
+        closeModifyModal();
+        location.reload();
+      })
+      .catch(error => alert(error.message));
+    }
+
+    function handleDeleteDepartment(id) {
+      if (!confirm("Delete this department?")) return;
+
+      fetch("/api/departments/" + id, { method: "DELETE" })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to delete department");
+        location.reload();
+      })
+      .catch(error => alert(error.message));
+    }
+
+    function openModifyModal(dept) {
+      const form = document.getElementById("modify-form");
+      form.id.value = dept[0];
+      form.name.value = dept[1];
+      form.code.value = dept[2];
+      document.getElementById("modify-modal").style.display = "block";
+      document.getElementById("modify-overlay").style.display = "block";
+    }
+
+    function closeModifyModal() {
+      document.getElementById("modify-modal").style.display = "none";
+      document.getElementById("modify-overlay").style.display = "none";
+      document.getElementById("modify-form").reset();
+    }
+
+    function openAddModal() {
+      document.getElementById("add-modal").style.display = "block";
+      document.getElementById("add-overlay").style.display = "block";
+    }
+
+    function closeAddModal() {
+      document.getElementById("add-modal").style.display = "none";
+      document.getElementById("add-overlay").style.display = "none";
+      document.getElementById("add-form").reset();
+    }
+  </script>
+  <script src="{{ url_for('static', filename='js/frontapi.js') }}"></script>
+</body>
+</html>

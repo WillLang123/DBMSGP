@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Professors</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body data-page="professors">
+  <div class="banner">
+    <a href="/">Home</a>
+    <a href="/departments">Departments</a>
+    <a href="/professors">Professors</a>
+    <a href="/students">Students</a>
+    <a href="/courses">Courses</a>
+    <a href="/sections">Sections</a>
+    <a href="/enrollments">Enrollments</a>
+  </div>
+
+  <div class="container">
+    <h2>Professors Table</h2>
+
+    <div class="top-controls">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="Search professors...">
+      </div>
+      <div class="add-btn-wrapper">
+        <button id="add-btn" class="add">Add</button>
+      </div>
+    </div>
+
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>ID <button class="sort-btn" data-key="0" data-order="asc">↑</button></th>
+          <th>Name <button class="sort-btn" data-key="1" data-order="asc">↑</button></th>
+          <th>Email <button class="sort-btn" data-key="2" data-order="asc">↑</button></th>
+          <th>Department ID <button class="sort-btn" data-key="3" data-order="asc">↑</button></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- Data rows -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="add-overlay" class="overlay" style="display:none;"></div>
+
+  <div id="add-modal" class="modal" style="display:none;">
+    <h3>Add New Professor</h3>
+    <form id="add-form">
+      <label>
+        Name:<br />
+        <input type="text" name="name" required />
+      </label><br /><br />
+      <label>
+        Email:<br />
+        <input type="email" name="email" required />
+      </label><br /><br />
+      <label>
+        Department ID:<br />
+        <input type="number" name="departmentid" required />
+      </label><br /><br />
+      <button type="submit">Add Professor</button>
+      <button type="button" id="cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <div id="modify-overlay" class="overlay" style="display:none;"></div>
+
+  <div id="modify-modal" class="modal" style="display:none;">
+    <h3>Modify Professor</h3>
+    <form id="modify-form">
+      <input type="hidden" name="id" />
+      <label>
+        Name:<br />
+        <input type="text" name="name" required />
+      </label><br /><br />
+      <label>
+        Email:<br />
+        <input type="email" name="email" required />
+      </label><br /><br />
+      <label>
+        Department ID:<br />
+        <input type="number" name="departmentid" required />
+      </label><br /><br />
+      <button type="submit">Save Changes</button>
+      <button type="button" id="modify-cancel-btn">Cancel</button>
+    </form>
+  </div>
+
+  <script>
+    function handleAddProfessor(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const professor = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        departmentid: parseInt(form.departmentid.value.trim())
+      };
+
+      fetch("/api/professors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(professor)
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to add professor");
+          return res.json();
+        })
+        .then(() => {
+          closeAddModal();
+          location.reload();
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function handleModifyProfessor(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const professor = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        departmentid: parseInt(form.departmentid.value.trim())
+      };
+
+      const id = form.id.value;
+
+      fetch("/api/professors/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(professor)
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to update professor");
+          return res.json();
+        })
+        .then(() => {
+          closeModifyModal();
+          location.reload();
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function handleDeleteProfessor(id) {
+      if (!confirm("Delete this professor?")) return;
+
+      fetch("/api/professors/" + id, { method: "DELETE" })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to delete professor");
+          location.reload();
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function openModifyModal(professor) {
+      const modal = document.getElementById("modify-modal");
+      const overlay = document.getElementById("modify-overlay");
+      const form = document.getElementById("modify-form");
+
+      form.id.value = professor[0];
+      form.name.value = professor[1];
+      form.email.value = professor[2];
+      form.departmentid.value = professor[3];
+
+      modal.style.display = "block";
+      overlay.style.display = "block";
+    }
+
+    function closeModifyModal() {
+      document.getElementById("modify-modal").style.display = "none";
+      document.getElementById("modify-overlay").style.display = "none";
+      document.getElementById("modify-form").reset();
+    }
+
+    function openAddModal() {
+      document.getElementById("add-modal").style.display = "block";
+      document.getElementById("add-overlay").style.display = "block";
+    }
+
+    function closeAddModal() {
+      document.getElementById("add-modal").style.display = "none";
+      document.getElementById("add-overlay").style.display = "none";
+      document.getElementById("add-form").reset();
+    }
+  </script>
+  <script src="{{ url_for('static', filename='js/frontapi.js') }}"></script>
+</body>
+</html>
