@@ -8,6 +8,7 @@ let enrollmentsData = [];
 let studentStates = { col: null, asc: true };
 let studentSearch = "";
 
+//add other entity stuff
 document.addEventListener("DOMContentLoaded", 
   async function () {
     await fetchData();
