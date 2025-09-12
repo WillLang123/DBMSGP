@@ -135,7 +135,7 @@
     }
 
     function handleDeleteCourse(id) {
-      if (!confirm("Delete this course?")) return;
+      if (!confirm("Delete this course? This will remove any enrollments associated with it.")) return;
 
       fetch("/api/courses/" + id, { method: "DELETE" })
       .then(res => {

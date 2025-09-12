@@ -147,7 +147,7 @@
     }
 
     function handleDeleteProfessor(id) {
-      if (!confirm("Delete this professor?")) return;
+      if (!confirm("Delete this professor? This will remove any sections and enrollments they teach.")) return;
 
       fetch("/api/professors/" + id, { method: "DELETE" })
         .then(res => {

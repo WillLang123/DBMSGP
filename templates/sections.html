@@ -125,7 +125,7 @@
     }
 
     function handleDeleteSection(id) {
-      if (!confirm("Delete this section?")) return;
+      if (!confirm("Delete this section? This will remove all of its enrollments too.")) return;
 
       fetch("/api/sections/" + id, { method: "DELETE" })
       .then(res => {

@@ -3,6 +3,7 @@ import sqlite3
 def quickOpen():
     connection = sqlite3.connect("DBMSGP.db")
     cursor = connection.cursor()
+    cursor.execute("PRAGMA foreign_keys = ON") #had to add this so if department deleted, it removed anything associated with it and so on.
     return cursor, connection
 
 def quickClose(cursor, connection):
