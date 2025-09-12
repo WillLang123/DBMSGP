@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session, Response
 from dbmgr import quickOpen, quickClose, dbstartup, populateDB, unpopulateDB
 
-#TODOS: id to text translate/grab, streamline
+#TODOS: streamline, fix cascase delete
 
 app = Flask(__name__)
 app.secret_key = "DBMSGP"
@@ -163,7 +163,7 @@ def deletedepartment(id):
 @app.route("/get/professors", methods=["GET"])
 def getprofessors():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT * FROM Professors")
+    cursor.execute("SELECT Professors.id, Professors.name, Professors.email, Departments.name AS departmentname FROM Professors LEFT JOIN Departments ON Professors.departmentid = Departments.id")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -217,7 +217,7 @@ def deleteprofessor(id):
 @app.route("/get/courses", methods=["GET"])
 def getcourses():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT * FROM Courses")
+    cursor.execute("SELECT Courses.id, Courses.name, Courses.code, Courses.credits, Courses.description, Departments.name AS departmentname FROM Courses LEFT JOIN Departments ON Courses.departmentid = Departments.id")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -277,7 +277,7 @@ def deletecourse(id):
 @app.route("/get/sections", methods=["GET"])
 def getsections():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT * FROM Sections")
+    cursor.execute("SELECT Sections.id, Professors.name AS professorname, Courses.name AS coursename, Sections.schedule FROM Sections LEFT JOIN Professors ON Sections.professorid = Professors.id LEFT JOIN Courses ON Sections.courseid = Courses.id")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -337,7 +337,7 @@ def deletesection(id):
 @app.route("/get/enrollments", methods=["GET"])
 def getenrollments():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT * FROM Enrollments")
+    cursor.execute("SELECT Enrollments.id, Students.name AS studentname, Enrollments.sectionid, Enrollments.grade FROM Enrollments LEFT JOIN Students ON Enrollments.studentid = Students.id")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)

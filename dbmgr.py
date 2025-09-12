@@ -33,8 +33,8 @@ def dbstartup():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Students (
         id INTEGER PRIMARY KEY,
-        email TEXT NOT NULL,
         name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
         enrollmentyear INTEGER NOT NULL
     );
     """)
