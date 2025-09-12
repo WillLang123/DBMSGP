@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session, Response
 from dbmgr import quickOpen, quickClose, dbstartup, populateDB, unpopulateDB
 
-#TODOS: streamline, fix cascase delete
+#TODOS: streamline, clean slop
 
 app = Flask(__name__)
 app.secret_key = "DBMSGP"
