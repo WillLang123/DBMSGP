@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Professors</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
@@ -52,17 +52,17 @@
     <h3>Add New Professor</h3>
     <form id="add-form">
       <label>
-        Name:<br />
-        <input type="text" name="name" required />
-      </label><br /><br />
+        Name:<br/>
+        <input type="text" name="name" required/>
+      </label><br/><br/>
       <label>
-        Email:<br />
-        <input type="email" name="email" required />
-      </label><br /><br />
+        Email:<br/>
+        <input type="email" name="email" required/>
+      </label><br/><br/>
       <label>
-        Department ID:<br />
-        <input type="number" name="departmentid" required />
-      </label><br /><br />
+        Department ID:<br/>
+        <input type="number" name="departmentid" required/>
+      </label><br/><br/>
       <button type="submit">Add Professor</button>
       <button type="button" id="cancel-btn">Cancel</button>
     </form>
@@ -73,19 +73,19 @@
   <div id="modify-modal" class="modal" style="display:none;">
     <h3>Modify Professor</h3>
     <form id="modify-form">
-      <input type="hidden" name="id" />
+      <input type="hidden" name="id"/>
       <label>
-        Name:<br />
-        <input type="text" name="name" required />
-      </label><br /><br />
+        Name:<br/>
+        <input type="text" name="name" required/>
+      </label><br/><br/>
       <label>
-        Email:<br />
-        <input type="email" name="email" required />
-      </label><br /><br />
+        Email:<br/>
+        <input type="email" name="email" required/>
+      </label><br/><br/>
       <label>
-        Department ID:<br />
-        <input type="number" name="departmentid" required />
-      </label><br /><br />
+        Department ID:<br/>
+        <input type="number" name="departmentid" required/>
+      </label><br/><br/>
       <button type="submit">Save Changes</button>
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
@@ -109,7 +109,6 @@
       })
         .then(res => {
           if (!res.ok) throw new Error("Failed to add professor");
-          return res.json();
         })
         .then(() => {
           closeAddModal();
@@ -137,7 +136,6 @@
       })
         .then(res => {
           if (!res.ok) throw new Error("Failed to update professor");
-          return res.json();
         })
         .then(() => {
           closeModifyModal();

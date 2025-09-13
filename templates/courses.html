@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Courses</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
@@ -50,11 +50,11 @@
   <div id="add-modal" class="modal" style="display:none;">
     <h3>Add New Course</h3>
     <form id="add-form">
-      <label>Name:<br /><input type="text" name="name" required /></label><br /><br />
-      <label>Code:<br /><input type="text" name="code" required /></label><br /><br />
-      <label>Credits:<br /><input type="number" name="credits" required /></label><br /><br />
-      <label>Description:<br /><textarea name="description" required></textarea></label><br /><br />
-      <label>Department ID:<br /><input type="number" name="departmentid" required /></label><br /><br />
+      <label>Name:<br/><input type="text" name="name" required/></label><br/><br/>
+      <label>Code:<br/><input type="text" name="code" required/></label><br/><br/>
+      <label>Credits:<br/><input type="number" name="credits" required/></label><br/><br/>
+      <label>Description:<br/><textarea name="description" required></textarea></label><br/><br/>
+      <label>Department ID:<br/><input type="number" name="departmentid" required/></label><br/><br/>
       <button type="submit">Add Course</button>
       <button type="button" id="cancel-btn">Cancel</button>
     </form>
@@ -65,12 +65,12 @@
   <div id="modify-modal" class="modal" style="display:none;">
     <h3>Modify Course</h3>
     <form id="modify-form">
-      <input type="hidden" name="id" />
-      <label>Name:<br /><input type="text" name="name" required /></label><br /><br />
-      <label>Code:<br /><input type="text" name="code" required /></label><br /><br />
-      <label>Credits:<br /><input type="number" name="credits" required /></label><br /><br />
-      <label>Description:<br /><textarea name="description" required></textarea></label><br /><br />
-      <label>Department ID:<br /><input type="number" name="departmentid" required /></label><br /><br />
+      <input type="hidden" name="id"/>
+      <label>Name:<br/><input type="text" name="name" required/></label><br/><br/>
+      <label>Code:<br/><input type="text" name="code" required/></label><br/><br/>
+      <label>Credits:<br/><input type="number" name="credits" required/></label><br/><br/>
+      <label>Description:<br/><textarea name="description" required></textarea></label><br/><br/>
+      <label>Department ID:<br/><input type="number" name="departmentid" required/></label><br/><br/>
       <button type="submit">Save Changes</button>
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
@@ -96,7 +96,6 @@
       })
       .then(res => {
         if (!res.ok) throw new Error("Failed to add course");
-        return res.json();
       })
       .then(() => {
         closeAddModal();
@@ -125,7 +124,6 @@
       })
       .then(res => {
         if (!res.ok) throw new Error("Failed to update course");
-        return res.json();
       })
       .then(() => {
         closeModifyModal();

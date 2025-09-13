@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Enrollments</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
@@ -48,9 +48,9 @@
   <div id="add-modal" class="modal" style="display:none;">
     <h3>Add New Enrollment</h3>
     <form id="add-form">
-      <label>Student ID:<br /><input type="number" name="studentid" required /></label><br /><br />
-      <label>Section ID:<br /><input type="number" name="sectionid" required /></label><br /><br />
-      <label>Grade:<br /><input type="text" name="grade" required /></label><br /><br />
+      <label>Student ID:<br/><input type="number" name="studentid" required/></label><br/><br/>
+      <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
+      <label>Grade:<br/><input type="text" name="grade" required/></label><br/><br/>
       <button type="submit">Add Enrollment</button>
       <button type="button" id="cancel-btn">Cancel</button>
     </form>
@@ -61,10 +61,10 @@
   <div id="modify-modal" class="modal" style="display:none;">
     <h3>Modify Enrollment</h3>
     <form id="modify-form">
-      <input type="hidden" name="id" />
-      <label>Student ID:<br /><input type="number" name="studentid" required /></label><br /><br />
-      <label>Section ID:<br /><input type="number" name="sectionid" required /></label><br /><br />
-      <label>Grade:<br /><input type="text" name="grade" required /></label><br /><br />
+      <input type="hidden" name="id"/>
+      <label>Student ID:<br/><input type="number" name="studentid" required/></label><br/><br/>
+      <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
+      <label>Grade:<br/><input type="text" name="grade" required/></label><br/><br/>
       <button type="submit">Save Changes</button>
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
@@ -88,7 +88,6 @@
       })
       .then(res => {
         if (!res.ok) throw new Error("Failed to add enrollment");
-        return res.json();
       })
       .then(() => {
         closeAddModal();
@@ -115,7 +114,6 @@
       })
       .then(res => {
         if (!res.ok) throw new Error("Failed to update enrollment");
-        return res.json();
       })
       .then(() => {
         closeModifyModal();

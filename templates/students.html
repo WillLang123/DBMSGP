@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Students</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
@@ -52,17 +52,17 @@
     <h3>Add New Student</h3>
     <form id="add-form">
       <label>
-        Name:<br />
-        <input type="text" name="name" required />
-      </label><br /><br />
+        Name:<br/>
+        <input type="text" name="name" required/>
+      </label><br/><br/>
       <label>
-        Email:<br />
-        <input type="email" name="email" required />
-      </label><br /><br />
+        Email:<br/>
+        <input type="email" name="email" required/>
+      </label><br/><br/>
       <label>
-        Enrollment Year:<br />
-        <input type="number" name="enrollmentyear" required min="1900" max="2100" />
-      </label><br /><br />
+        Enrollment Year:<br/>
+        <input type="number" name="enrollmentyear" required min="1900" max="2100"/>
+      </label><br/><br/>
       <button type="submit">Add Student</button>
       <button type="button" id="cancel-btn">Cancel</button>
     </form>
@@ -73,19 +73,19 @@
   <div id="modify-modal" class="modal" style="display:none;">
     <h3>Modify Student</h3>
     <form id="modify-form">
-      <input type="hidden" name="id" />
+      <input type="hidden" name="id"/>
       <label>
-        Name:<br />
-        <input type="text" name="name" required />
-      </label><br /><br />
+        Name:<br/>
+        <input type="text" name="name" required/>
+      </label><br/><br/>
       <label>
-        Email:<br />
-        <input type="email" name="email" required />
-      </label><br /><br />
+        Email:<br/>
+        <input type="email" name="email" required/>
+      </label><br/><br/>
       <label>
-        Enrollment Year:<br />
-        <input type="number" name="enrollmentyear" required min="1900" max="2100" />
-      </label><br /><br />
+        Enrollment Year:<br/>
+        <input type="number" name="enrollmentyear" required min="1900" max="2100"/>
+      </label><br/><br/>
       <button type="submit">Save Changes</button>
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
@@ -109,7 +109,6 @@
       })
         .then(function (res) {
           if (!res.ok) throw new Error("Failed to add student");
-          return res.json();
         })
         .then(function () {
           closeAddModal();
@@ -139,7 +138,6 @@
       })
         .then(function (res) {
           if (!res.ok) throw new Error("Failed to update student");
-          return res.json();
         })
         .then(function () {
           closeModifyModal();

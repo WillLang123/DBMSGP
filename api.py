@@ -61,11 +61,11 @@ def addstudent():
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 201
+        return "Complete", 200
 
-    except Exception as e:
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #updates student entry based on restful url /id and json
 @app.route("/api/students/<int:id>", methods=["PUT"])
@@ -85,11 +85,11 @@ def modifystudent(id):
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
+        return "Complete", 200
 
-    except Exception as e:
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #deletes students and enrollments with student based off /id and json
 @app.route("/api/students/<int:id>", methods=["DELETE"])
@@ -99,11 +99,11 @@ def deletestudent(id):
         cursor.execute("DELETE FROM Students WHERE id = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
+        return "Complete", 200
 
-    except Exception as e:
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #Department Methods
 
@@ -126,10 +126,10 @@ def adddepartment():
         """, (data["name"], data["code"]))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 201
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/departments/<int:id>", methods=["PUT"])
 def modifydepartment(id):
@@ -141,10 +141,10 @@ def modifydepartment(id):
         """, (data["name"], data["code"], id))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/departments/<int:id>", methods=["DELETE"])
 def deletedepartment(id):
@@ -153,10 +153,10 @@ def deletedepartment(id):
         cursor.execute("DELETE FROM Departments WHERE id = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #Professor Methods
 
@@ -179,10 +179,10 @@ def addprofessor():
         """, (data["name"], data["email"], int(data["departmentid"])))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 201
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/professors/<int:id>", methods=["PUT"])
 def modifyprofessor(id):
@@ -195,10 +195,10 @@ def modifyprofessor(id):
         """, (data["name"], data["email"], int(data["departmentid"]), id))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/professors/<int:id>", methods=["DELETE"])
 def deleteprofessor(id):
@@ -207,10 +207,10 @@ def deleteprofessor(id):
         cursor.execute("DELETE FROM Professors WHERE id = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #Course functions
 
@@ -236,10 +236,10 @@ def addcourse():
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 201
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/courses/<int:id>", methods=["PUT"])
 def modifycourse(id):
@@ -255,10 +255,10 @@ def modifycourse(id):
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/courses/<int:id>", methods=["DELETE"])
 def deletecourse(id):
@@ -267,10 +267,10 @@ def deletecourse(id):
         cursor.execute("DELETE FROM Courses WHERE id = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #Section methods
 
@@ -295,10 +295,10 @@ def addsection():
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 201
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/sections/<int:id>", methods=["PUT"])
 def modifysection(id):
@@ -315,10 +315,10 @@ def modifysection(id):
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/sections/<int:id>", methods=["DELETE"])
 def deletesection(id):
@@ -327,10 +327,10 @@ def deletesection(id):
         cursor.execute("DELETE FROM Sections WHERE id = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #Enrollment functions
 
@@ -356,10 +356,10 @@ def addenrollment():
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 201
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/enrollments/<int:id>", methods=["PUT"])
 def modifyenrollment(id):
@@ -376,10 +376,10 @@ def modifyenrollment(id):
         ))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 @app.route("/api/enrollments/<int:id>", methods=["DELETE"])
 def deleteenrollment(id):
@@ -388,17 +388,17 @@ def deleteenrollment(id):
         cursor.execute("DELETE FROM Enrollments WHERE id = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
+        return "Complete", 200
+    except Exception:
         quickClose(cursor, conn)
-        return jsonify({"error": str(e)}), 400
+        return "Failed", 400
 
 #initial db setup
 cursor, conn = quickOpen()
 try:
     dbstartup()
     conn.commit()
-except Exception as e:
+except Exception:
     print("Issue with making Schema")
     conn.rollback()
 finally:

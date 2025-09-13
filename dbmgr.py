@@ -98,7 +98,7 @@ def populateDB():
         email = f"test{i}@lamar.edu"
         code = f"COSC{i}"
         credits = i
-        schedule = f"Mon/Wed {i}:00AM - {i}:15AM"
+        schedule = f"Mon {i}:00AM"
         enrollmentyear = 2000 + i
         grade = "A"
 
