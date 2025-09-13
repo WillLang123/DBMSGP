@@ -69,7 +69,6 @@
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
   </div>
-
   <script>
     function handleAddSection(event) {
       event.preventDefault();
@@ -86,14 +85,22 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(section)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to add section");
-      })
-      .then(() => {
-        closeAddModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to add section");
+        }
+      )
+      .then(
+        function () {
+          closeAddModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleModifySection(event) {
@@ -112,36 +119,53 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(section)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to update section");
-      })
-      .then(() => {
-        closeModifyModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to update section");
+        }
+      )
+      .then(
+        function () {
+          closeModifyModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleDeleteSection(id) {
       if (!confirm("Delete this section? This will remove all of its enrollments too.")) return;
 
       fetch("/api/sections/" + id, { method: "DELETE" })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to delete section");
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to delete section");
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function openModifyModal(section) {
+      const modal = document.getElementById("modify-modal");
+      const overlay = document.getElementById("modify-overlay");
       const form = document.getElementById("modify-form");
+
       form.id.value = section[0];
       form.professorid.value = section[1];
       form.courseid.value = section[2];
       form.schedule.value = section[3];
 
-      document.getElementById("modify-modal").style.display = "block";
-      document.getElementById("modify-overlay").style.display = "block";
+      modal.style.display = "block";
+      overlay.style.display = "block";
     }
 
     function closeModifyModal() {

@@ -209,17 +209,23 @@ function renderTable(dataArray, state, searchTerm, onModify, onDelete) {
   const tbody = document.querySelector("#data-table tbody");
   tbody.innerHTML = "";
 
-  const filtered = dataArray.filter(function (entry) {
-    return entry.some(function (value) {
-      return String(value).toLowerCase().includes(searchTerm);
-    });
-  });
+  const filtered = dataArray.filter(
+    function (entry) {
+      return entry.some(
+        function (value) {
+          return String(value).toLowerCase().includes(searchTerm);
+        }
+      );
+    }
+  );
 
   const sorted = sortTableData(filtered, state);
 
-  sorted.forEach(function (entry) {
-    tbody.appendChild(createRow(entry, onModify, onDelete));
-  });
+  sorted.forEach(
+    function (entry) {
+      tbody.appendChild(createRow(entry, onModify, onDelete));
+    }
+  );
 }
 
 function createRow(data, onModify, onDelete) {
@@ -227,13 +233,15 @@ function createRow(data, onModify, onDelete) {
   const id = data[0];
 
   let cells = "";
-  data.forEach(function (value, i) {
-    if (i === 0) {
-      cells += "<td>" + value + "</td>";
-    } else {
-      cells += "<td contenteditable>" + value + "</td>";
+  data.forEach(
+    function (value, i) {
+      if (i === 0) {
+        cells += "<td>" + value + "</td>";
+      } else {
+        cells += "<td contenteditable>" + value + "</td>";
+      }
     }
-  });
+  );
 
   row.innerHTML =
     cells +
@@ -244,14 +252,17 @@ function createRow(data, onModify, onDelete) {
     </td>
   `;
 
-  row.querySelector(".modify-btn").addEventListener("click", function () {
-    onModify(data);
-  });
+  row.querySelector(".modify-btn").addEventListener("click", 
+    function () {
+      onModify(data);
+    }
+  );
 
-  row.querySelector(".delete-btn").addEventListener("click", function () {
-    onDelete(id);
-  });
-
+  row.querySelector(".delete-btn").addEventListener("click", 
+    function () {
+      onDelete(id);
+    }
+  );
   return row;
 }
 
@@ -260,21 +271,25 @@ function setupSorting(options) {
   const onSort = options.onSort;
   const selector = options.selector || ".sort-btn";
 
-  document.querySelectorAll(selector).forEach(function (button) {
-    button.addEventListener("click", function () {
-      const colNum = parseInt(this.getAttribute("data-key"));
+  document.querySelectorAll(selector).forEach(
+    function (button) {
+      button.addEventListener("click", 
+        function () {
+          const colNum = parseInt(this.getAttribute("data-key"));
 
-      if (state.col === colNum) {
-        state.asc = !state.asc;
-      } else {
-        state.col = colNum;
-        state.asc = true;
-      }
+          if (state.col === colNum) {
+            state.asc = !state.asc;
+          } else {
+            state.col = colNum;
+            state.asc = true;
+          }
 
-      updateSortIcons(state, selector);
-      onSort();
-    });
-  });
+          updateSortIcons(state, selector);
+          onSort();
+        }
+      );
+    }
+  );
 }
 
 function sortTableData(data, state) {
@@ -285,35 +300,39 @@ function sortTableData(data, state) {
   const col = state.col;
   const asc = state.asc;
 
-  return data.slice().sort(function (a, b) {
-    const A = a[col];
-    const B = b[col];
+  return data.slice().sort(
+    function (a, b) {
+      const A = a[col];
+      const B = b[col];
 
-    if (typeof A === "number" && typeof B === "number") {
-      return asc ? A - B : B - A;
+      if (typeof A === "number" && typeof B === "number") {
+        return asc ? A - B : B - A;
+      }
+
+      const textA = String(A).toLowerCase();
+      const textB = String(B).toLowerCase();
+
+      if (textA < textB) return asc ? -1 : 1;
+      if (textA > textB) return asc ? 1 : -1;
+      return 0;
     }
-
-    const textA = String(A).toLowerCase();
-    const textB = String(B).toLowerCase();
-
-    if (textA < textB) return asc ? -1 : 1;
-    if (textA > textB) return asc ? 1 : -1;
-    return 0;
-  });
+  );
 }
 
 function updateSortIcons(state, selector) {
   const buttons = document.querySelectorAll(selector);
-  buttons.forEach(function (button) {
-    const colNum = parseInt(button.getAttribute("data-key"));
-    let arrow;
-    if (state.col === colNum) {
-      arrow = state.asc ? "asc" : "desc";
-    } else {
-      arrow = "desc";
+  buttons.forEach(
+    function (button) {
+      const colNum = parseInt(button.getAttribute("data-key"));
+      let arrow;
+      if (state.col === colNum) {
+        arrow = state.asc ? "asc" : "desc";
+      } else {
+        arrow = "desc";
+      }
+      button.textContent = arrow;
     }
-    button.textContent = arrow;
-  });
+  );
 }
 
 function setupSearch(options) {
@@ -322,8 +341,10 @@ function setupSearch(options) {
   const input = document.querySelector(selector);
   if (!input) return;
 
-  input.addEventListener("input", function () {
-    const term = input.value.trim().toLowerCase();
-    onSearch(term);
-  });
+  input.addEventListener("input", 
+    function () {
+      const term = input.value.trim().toLowerCase();
+      onSearch(term);
+    }
+  );
 }

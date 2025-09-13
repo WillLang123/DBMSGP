@@ -94,14 +94,22 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(course)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to add course");
-      })
-      .then(() => {
-        closeAddModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to add course");
+        }
+      )
+      .then(
+        function () {
+          closeAddModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleModifyCourse(event) {
@@ -122,25 +130,39 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(course)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to update course");
-      })
-      .then(() => {
-        closeModifyModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to update course");
+        }
+      )
+      .then(
+        function () {
+          closeModifyModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleDeleteCourse(id) {
       if (!confirm("Delete this course? This will remove any enrollments associated with it.")) return;
 
       fetch("/api/courses/" + id, { method: "DELETE" })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to delete course");
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to delete course");
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function openModifyModal(course) {

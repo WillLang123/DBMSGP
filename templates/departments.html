@@ -67,7 +67,6 @@
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
   </div>
-
   <script>
     function handleAddDepartment(event) {
       event.preventDefault();
@@ -83,14 +82,22 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(department)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to add department");
-      })
-      .then(() => {
-        closeAddModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to add department");
+        }
+      )
+      .then(
+        function () {
+          closeAddModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleModifyDepartment(event) {
@@ -109,25 +116,39 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(department)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to update department");
-      })
-      .then(() => {
-        closeModifyModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to update department");
+        }
+      )
+      .then(
+        function () {
+          closeModifyModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleDeleteDepartment(id) {
       if (!confirm("Delete this department? This will also cascade remove anything associated with it, so ensure anything associated with it is modified.")) return;
 
       fetch("/api/departments/" + id, { method: "DELETE" })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to delete department");
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function (res) {
+          if (!res.ok) throw new Error("Failed to delete department");
+          location.reload();
+        }
+      )
+      .catch(
+        function (error) {
+          alert(error.message);
+        }
+      );
     }
 
     function openModifyModal(dept) {

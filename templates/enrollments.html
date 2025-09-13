@@ -69,7 +69,6 @@
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
   </div>
-
   <script>
     function handleAddEnrollment(event) {
       event.preventDefault();
@@ -86,14 +85,22 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(enrollment)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to add enrollment");
-      })
-      .then(() => {
-        closeAddModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function(res) {
+          if (!res.ok) throw new Error("Failed to add enrollment");
+        }
+      )
+      .then(
+        function() {
+          closeAddModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function(error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleModifyEnrollment(event) {
@@ -112,25 +119,39 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(enrollment)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to update enrollment");
-      })
-      .then(() => {
-        closeModifyModal();
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function(res) {
+          if (!res.ok) throw new Error("Failed to update enrollment");
+        }
+      )
+      .then(
+        function() {
+          closeModifyModal();
+          location.reload();
+        }
+      )
+      .catch(
+        function(error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleDeleteEnrollment(id) {
       if (!confirm("Delete this enrollment?")) return;
 
       fetch("/api/enrollments/" + id, { method: "DELETE" })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to delete enrollment");
-        location.reload();
-      })
-      .catch(error => alert(error.message));
+      .then(
+        function(res) {
+          if (!res.ok) throw new Error("Failed to delete enrollment");
+          location.reload();
+        }
+      )
+      .catch(
+        function(error) {
+          alert(error.message);
+        }
+      );
     }
 
     function openModifyModal(enrollment) {

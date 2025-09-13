@@ -90,7 +90,6 @@
       <button type="button" id="modify-cancel-btn">Cancel</button>
     </form>
   </div>
-
   <script>
     function handleAddProfessor(event) {
       event.preventDefault();
@@ -107,14 +106,22 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(professor)
       })
-        .then(res => {
+      .then(
+        function(res) {
           if (!res.ok) throw new Error("Failed to add professor");
-        })
-        .then(() => {
+        }
+      )
+      .then(
+        function() {
           closeAddModal();
           location.reload();
-        })
-        .catch(error => alert(error.message));
+        }
+      )
+      .catch(
+        function(error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleModifyProfessor(event) {
@@ -134,25 +141,39 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(professor)
       })
-        .then(res => {
+      .then(
+        function(res) {
           if (!res.ok) throw new Error("Failed to update professor");
-        })
-        .then(() => {
+        }
+      )
+      .then(
+        function() {
           closeModifyModal();
           location.reload();
-        })
-        .catch(error => alert(error.message));
+        }
+      )
+      .catch(
+        function(error) {
+          alert(error.message);
+        }
+      );
     }
 
     function handleDeleteProfessor(id) {
       if (!confirm("Delete this professor? This will remove any sections and enrollments they teach.")) return;
 
       fetch("/api/professors/" + id, { method: "DELETE" })
-        .then(res => {
+      .then(
+        function(res) {
           if (!res.ok) throw new Error("Failed to delete professor");
           location.reload();
-        })
-        .catch(error => alert(error.message));
+        }
+      )
+      .catch(
+        function(error) {
+          alert(error.message);
+        }
+      );
     }
 
     function openModifyModal(professor) {
