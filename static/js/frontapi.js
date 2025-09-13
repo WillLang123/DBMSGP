@@ -308,9 +308,9 @@ function updateSortIcons(state, selector) {
     const colNum = parseInt(button.getAttribute("data-key"));
     let arrow;
     if (state.col === colNum) {
-      arrow = state.asc ? "↑" : "↓";
+      arrow = state.asc ? "asc" : "desc";
     } else {
-      arrow = "↓";
+      arrow = "desc";
     }
     button.textContent = arrow;
   });
