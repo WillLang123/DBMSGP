@@ -260,7 +260,13 @@ function createRow(data, onModify, onDelete) {
 
   row.querySelector(".delete-btn").addEventListener("click", 
     function () {
+      const page = document.body.dataset.page;
+
+    if (page === "sections") {
+      onDelete(data[0], data[1]);
+    } else {
       onDelete(id);
+    }
     }
   );
   return row;

@@ -33,9 +33,10 @@
       <thead>
         <tr>
           <th>ID <button class="sort-btn" data-key="0" data-order="asc">asc</button></th>
-          <th>Student <button class="sort-btn" data-key="1" data-order="asc">asc</button></th>
-          <th>Section ID <button class="sort-btn" data-key="2" data-order="asc">asc</button></th>
-          <th>Grade <button class="sort-btn" data-key="3" data-order="asc">asc</button></th>
+          <th>Student ID <button class="sort-btn" data-key="1" data-order="asc">asc</button></th>
+          <th>Course ID <button class="sort-btn" data-key="2" data-order="asc">asc</button></th>
+          <th>Section ID <button class="sort-btn" data-key="3" data-order="asc">asc</button></th>
+          <th>Grade <button class="sort-btn" data-key="4" data-order="asc">asc</button></th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -49,6 +50,7 @@
     <h3>Add New Enrollment</h3>
     <form id="add-form">
       <label>Student ID:<br/><input type="number" name="studentid" required/></label><br/><br/>
+      <label>Course ID:<br/><input type="number" name="courseid" required/></label><br/><br/>
       <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
       <label>Grade:<br/><input type="text" name="grade" required/></label><br/><br/>
       <button type="submit">Add Enrollment</button>
@@ -63,6 +65,7 @@
     <form id="modify-form">
       <input type="hidden" name="id"/>
       <label>Student ID:<br/><input type="number" name="studentid" required/></label><br/><br/>
+      <label>Course ID:<br/><input type="number" name="courseid" required/></label><br/><br/>
       <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
       <label>Grade:<br/><input type="text" name="grade" required/></label><br/><br/>
       <button type="submit">Save Changes</button>
@@ -76,6 +79,7 @@
 
       const enrollment = {
         studentid: parseInt(form.studentid.value),
+        courseid: parseInt(form.courseid.value),
         sectionid: parseInt(form.sectionid.value),
         grade: form.grade.value.trim()
       };
@@ -110,6 +114,7 @@
 
       const enrollment = {
         studentid: parseInt(form.studentid.value),
+        courseid: parseInt(form.courseid.value),
         sectionid: parseInt(form.sectionid.value),
         grade: form.grade.value.trim()
       };
@@ -158,8 +163,9 @@
       const form = document.getElementById("modify-form");
       form.id.value = enrollment[0];
       form.studentid.value = enrollment[1];
-      form.sectionid.value = enrollment[2];
-      form.grade.value = enrollment[3];
+      form.courseid.value = enrollment[2];
+      form.sectionid.value = enrollment[3];
+      form.grade.value = enrollment[4];
 
       document.getElementById("modify-modal").style.display = "block";
       document.getElementById("modify-overlay").style.display = "block";
