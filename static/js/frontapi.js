@@ -263,7 +263,7 @@ function createRow(data, onModify, onDelete) {
       const page = document.body.dataset.page;
 
     if (page === "sections") {
-      onDelete(data[0], data[1]);
+      onDelete(data[0], data[2]);
     } else {
       onDelete(id);
     }

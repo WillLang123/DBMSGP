@@ -33,10 +33,11 @@
       <thead>
         <tr>
           <th>Course ID <button class="sort-btn" data-key="0" data-order="asc">asc</button></th>
-          <th>Section ID <button class="sort-btn" data-key="1" data-order="asc">asc</button></th>
-          <th>Professor <button class="sort-btn" data-key="2" data-order="asc">asc</button></th>
-          <th>Course Name <button class="sort-btn" data-key="3" data-order="asc">asc</button></th>
-          <th>Schedule <button class="sort-btn" data-key="4" data-order="asc">asc</button></th>
+          <th>Course Name <button class="sort-btn" data-key="1" data-order="asc">asc</button></th>
+          <th>Section ID <button class="sort-btn" data-key="2" data-order="asc">asc</button></th>
+          <th>Professor <button class="sort-btn" data-key="3" data-order="asc">asc</button></th>
+          <th>Professor Name <button class="sort-btn" data-key="4" data-order="asc">asc</button></th>
+          <th>Schedule <button class="sort-btn" data-key="5" data-order="asc">asc</button></th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -50,7 +51,7 @@
     <h3>Add New Section</h3>
     <form id="add-form">
       <label>Course ID:<br/><input type="number" name="courseid" required/></label><br/><br/>
-      <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
+      <label>New Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
       <label>Professor ID:<br/><input type="number" name="professorid" required/></label><br/><br/>
       <label>Schedule:<br/><input type="text" name="schedule" required/></label><br/><br/>
       <button type="submit">Add Section</button>
@@ -63,8 +64,8 @@
   <div id="modify-modal" class="modal" style="display:none;">
     <h3>Modify Section</h3>
     <form id="modify-form">
-      <input type="hidden" name="courseid"/>
-      <input type="hidden" name="sectionid"/>
+      <label>Course ID:<br/><input type="number" name="courseid" required/></label><br/><br/>
+      <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
       <label>Professor ID:<br/><input type="number" name="professorid" required/></label><br/><br/>
       <label>Schedule:<br/><input type="text" name="schedule" required/></label><br/><br/>
       <button type="submit">Save Changes</button>
@@ -109,11 +110,13 @@
     function handleModifySection(event) {
       event.preventDefault();
       const form = event.target;
-
       const courseid = parseInt(form.courseid.value);
       const sectionid = parseInt(form.sectionid.value);
 
+
       const section = {
+        courseid: parseInt(form.courseid.value),
+        sectionid: parseInt(form.sectionid.value),
         professorid: parseInt(form.professorid.value),
         schedule: form.schedule.value.trim()
       };
@@ -163,9 +166,9 @@
     function openModifyModal(section) {
       const form = document.getElementById("modify-form");
       form.courseid.value = section[0];
-      form.sectionid.value = section[1];
-      form.professorid.value = section[2];
-      form.schedule.value = section[4];
+      form.sectionid.value = section[2];
+      form.professorid.value = section[3];
+      form.schedule.value = section[5];
 
       document.getElementById("modify-modal").style.display = "block";
       document.getElementById("modify-overlay").style.display = "block";

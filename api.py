@@ -149,7 +149,7 @@ def deletedepartment(id):
 def getprofessors():
     cursor, conn = quickOpen()
     cursor.execute("""
-        SELECT PROFESSORS.professorid, PROFESSORS.name, PROFESSORS.email, DEPARTMENTS.name AS departmentname
+        SELECT PROFESSORS.professorid, PROFESSORS.name, PROFESSORS.email, PROFESSORS.departmentid, DEPARTMENTS.name AS departmentname
         FROM PROFESSORS
         LEFT JOIN DEPARTMENTS ON PROFESSORS.departmentid = DEPARTMENTS.departmentid
     """)
@@ -205,7 +205,7 @@ def deleteprofessor(id):
 def getcourses():
     cursor, conn = quickOpen()
     cursor.execute("""
-        SELECT COURSES.courseid, COURSES.name, COURSES.code, COURSES.credits, COURSES.description, DEPARTMENTS.name AS departmentname
+        SELECT COURSES.courseid, COURSES.name, COURSES.code, COURSES.credits, COURSES.description, COURSES.departmentid, DEPARTMENTS.name AS departmentname
         FROM COURSES
         LEFT JOIN DEPARTMENTS ON COURSES.departmentid = DEPARTMENTS.departmentid
     """)
@@ -267,7 +267,7 @@ def deletecourse(id):
 def getsections():
     cursor, conn = quickOpen()
     cursor.execute("""
-        SELECT SECTIONS.courseid, SECTIONS.sectionid, PROFESSORS.name AS professorname, COURSES.name AS coursename, SECTIONS.schedule
+        SELECT SECTIONS.courseid, COURSES.name AS coursename, SECTIONS.sectionid, SECTIONS.professorid, PROFESSORS.name AS professorname, SECTIONS.schedule
         FROM SECTIONS
         LEFT JOIN PROFESSORS ON SECTIONS.professorid = PROFESSORS.professorid
         LEFT JOIN COURSES ON SECTIONS.courseid = COURSES.courseid
@@ -334,8 +334,17 @@ def deletesection(courseid, sectionid):
 def getenrollments():
     cursor, conn = quickOpen()
     cursor.execute("""
-        SELECT ENROLLMENTS.enrollmentid, ENROLLMENTS.studentid, ENROLLMENTS.courseid, ENROLLMENTS.sectionid, ENROLLMENTS.grade
+        SELECT 
+            ENROLLMENTS.enrollmentid, 
+            ENROLLMENTS.studentid, 
+            STUDENTS.name AS studentname,
+            ENROLLMENTS.courseid, 
+            COURSES.name AS coursename,
+            ENROLLMENTS.sectionid, 
+            ENROLLMENTS.grade
         FROM ENROLLMENTS
+        LEFT JOIN STUDENTS ON ENROLLMENTS.studentid = STUDENTS.studentid
+        LEFT JOIN COURSES ON ENROLLMENTS.courseid = COURSES.courseid
     """)
     data = cursor.fetchall()
     quickClose(cursor, conn)
