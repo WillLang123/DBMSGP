@@ -32,10 +32,12 @@
     <table id="data-table">
       <thead>
         <tr>
-          <th>ID <button class="sort-btn" data-key="0" data-order="asc">asc</button></th>
-          <th>Professor <button class="sort-btn" data-key="1" data-order="asc">asc</button></th>
-          <th>Course <button class="sort-btn" data-key="2" data-order="asc">asc</button></th>
-          <th>Schedule <button class="sort-btn" data-key="3" data-order="asc">asc</button></th>
+          <th>Course ID <button class="sort-btn" data-key="0" data-order="asc">asc</button></th>
+          <th>Course Name <button class="sort-btn" data-key="1" data-order="asc">asc</button></th>
+          <th>Section ID <button class="sort-btn" data-key="2" data-order="asc">asc</button></th>
+          <th>Professor <button class="sort-btn" data-key="3" data-order="asc">asc</button></th>
+          <th>Professor Name <button class="sort-btn" data-key="4" data-order="asc">asc</button></th>
+          <th>Schedule <button class="sort-btn" data-key="5" data-order="asc">asc</button></th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -48,8 +50,9 @@
   <div id="add-modal" class="modal" style="display:none;">
     <h3>Add New Section</h3>
     <form id="add-form">
-      <label>Professor ID:<br/><input type="number" name="professorid" required/></label><br/><br/>
       <label>Course ID:<br/><input type="number" name="courseid" required/></label><br/><br/>
+      <label>New Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
+      <label>Professor ID:<br/><input type="number" name="professorid" required/></label><br/><br/>
       <label>Schedule:<br/><input type="text" name="schedule" required/></label><br/><br/>
       <button type="submit">Add Section</button>
       <button type="button" id="cancel-btn">Cancel</button>
@@ -61,9 +64,9 @@
   <div id="modify-modal" class="modal" style="display:none;">
     <h3>Modify Section</h3>
     <form id="modify-form">
-      <input type="hidden" name="id"/>
-      <label>Professor ID:<br/><input type="number" name="professorid" required/></label><br/><br/>
       <label>Course ID:<br/><input type="number" name="courseid" required/></label><br/><br/>
+      <label>Section ID:<br/><input type="number" name="sectionid" required/></label><br/><br/>
+      <label>Professor ID:<br/><input type="number" name="professorid" required/></label><br/><br/>
       <label>Schedule:<br/><input type="text" name="schedule" required/></label><br/><br/>
       <button type="submit">Save Changes</button>
       <button type="button" id="modify-cancel-btn">Cancel</button>
@@ -75,8 +78,9 @@
       const form = event.target;
 
       const section = {
-        professorid: parseInt(form.professorid.value),
         courseid: parseInt(form.courseid.value),
+        sectionid: parseInt(form.sectionid.value),
+        professorid: parseInt(form.professorid.value),
         schedule: form.schedule.value.trim()
       };
 
@@ -86,18 +90,18 @@
         body: JSON.stringify(section)
       })
       .then(
-        function (res) {
+        function(res) {
           if (!res.ok) throw new Error("Failed to add section");
         }
       )
       .then(
-        function () {
+        function() {
           closeAddModal();
           location.reload();
         }
       )
       .catch(
-        function (error) {
+        function(error) {
           alert(error.message);
         }
       );
@@ -106,66 +110,68 @@
     function handleModifySection(event) {
       event.preventDefault();
       const form = event.target;
-      const id = form.id.value;
+      const courseid = parseInt(form.courseid.value);
+      const sectionid = parseInt(form.sectionid.value);
+
 
       const section = {
-        professorid: parseInt(form.professorid.value),
         courseid: parseInt(form.courseid.value),
+        sectionid: parseInt(form.sectionid.value),
+        professorid: parseInt(form.professorid.value),
         schedule: form.schedule.value.trim()
       };
 
-      fetch("/api/sections/" + id, {
+      fetch("/api/sections/" + courseid + "/" + sectionid, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(section)
       })
       .then(
-        function (res) {
+        function(res) {
           if (!res.ok) throw new Error("Failed to update section");
         }
       )
       .then(
-        function () {
+        function() {
           closeModifyModal();
           location.reload();
         }
       )
       .catch(
-        function (error) {
+        function(error) {
           alert(error.message);
         }
       );
     }
 
-    function handleDeleteSection(id) {
+    function handleDeleteSection(courseid, sectionid) {
       if (!confirm("Delete this section? This will remove all of its enrollments too.")) return;
 
-      fetch("/api/sections/" + id, { method: "DELETE" })
+      fetch("/api/sections/" + courseid + "/" + sectionid, {
+        method: "DELETE"
+      })
       .then(
-        function (res) {
+        function(res) {
           if (!res.ok) throw new Error("Failed to delete section");
           location.reload();
         }
       )
       .catch(
-        function (error) {
+        function(error) {
           alert(error.message);
         }
       );
     }
 
     function openModifyModal(section) {
-      const modal = document.getElementById("modify-modal");
-      const overlay = document.getElementById("modify-overlay");
       const form = document.getElementById("modify-form");
+      form.courseid.value = section[0];
+      form.sectionid.value = section[2];
+      form.professorid.value = section[3];
+      form.schedule.value = section[5];
 
-      form.id.value = section[0];
-      form.professorid.value = section[1];
-      form.courseid.value = section[2];
-      form.schedule.value = section[3];
-
-      modal.style.display = "block";
-      overlay.style.display = "block";
+      document.getElementById("modify-modal").style.display = "block";
+      document.getElementById("modify-overlay").style.display = "block";
     }
 
     function closeModifyModal() {

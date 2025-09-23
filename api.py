@@ -1,17 +1,13 @@
 from flask import Flask, render_template, jsonify, request, session, Response
 from dbmgr import quickOpen, quickClose, dbstartup, populateDB, unpopulateDB
 
-#TODOS: streamline, clean slop
-
 app = Flask(__name__)
 app.secret_key = "DBMSGP"
 
-#renders index page
 @app.route("/")
 def index():
     return render_template("index.html")
 
-#renders student page
 @app.route("/students")
 def students():
     return render_template("students.html")
@@ -36,23 +32,21 @@ def sections():
 def enrollments():
     return render_template("enrollments.html")
 
-#Sends list of tuples to frontend
 @app.route("/get/students", methods=["GET"])
 def getstudents():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT * FROM Students")
+    cursor.execute("SELECT * FROM STUDENTS")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
 
-#adds student from api json
 @app.route("/api/students", methods=["POST"]) 
 def addstudent():
     cursor, conn = quickOpen()
     data = request.get_json()
     try:
         cursor.execute("""
-            INSERT INTO Students (name, email, enrollmentyear)
+            INSERT INTO STUDENTS (name, email, enrollmentyear)
             VALUES (?, ?, ?)
         """, (
             data["name"],
@@ -62,21 +56,19 @@ def addstudent():
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-
     except Exception:
         quickClose(cursor, conn)
         return "Failed", 400
 
-#updates student entry based on restful url /id and json
 @app.route("/api/students/<int:id>", methods=["PUT"])
 def modifystudent(id):
     cursor, conn = quickOpen()
     data = request.get_json()
     try:
         cursor.execute("""
-            UPDATE Students
+            UPDATE STUDENTS
             SET name = ?, email = ?, enrollmentyear = ?
-            WHERE id = ?
+            WHERE studentid = ?
         """, (
             data["name"],
             data["email"],
@@ -86,31 +78,26 @@ def modifystudent(id):
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-
     except Exception:
         quickClose(cursor, conn)
         return "Failed", 400
 
-#deletes students and enrollments with student based off /id and json
 @app.route("/api/students/<int:id>", methods=["DELETE"])
 def deletestudent(id):
     cursor, conn = quickOpen()
     try:
-        cursor.execute("DELETE FROM Students WHERE id = ?", (id,))
+        cursor.execute("DELETE FROM STUDENTS WHERE studentid = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-
     except Exception:
         quickClose(cursor, conn)
         return "Failed", 400
 
-#Department Methods
-
 @app.route("/get/departments", methods=["GET"])
 def getdepartments():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT * FROM Departments")
+    cursor.execute("SELECT * FROM DEPARTMENTS")
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -121,7 +108,7 @@ def adddepartment():
     data = request.get_json()
     try:
         cursor.execute("""
-            INSERT INTO Departments (name, code)
+            INSERT INTO DEPARTMENTS (name, code)
             VALUES (?, ?)
         """, (data["name"], data["code"]))
         conn.commit()
@@ -137,7 +124,7 @@ def modifydepartment(id):
     data = request.get_json()
     try:
         cursor.execute("""
-            UPDATE Departments SET name = ?, code = ? WHERE id = ?
+            UPDATE DEPARTMENTS SET name = ?, code = ? WHERE departmentid = ?
         """, (data["name"], data["code"], id))
         conn.commit()
         quickClose(cursor, conn)
@@ -150,7 +137,7 @@ def modifydepartment(id):
 def deletedepartment(id):
     cursor, conn = quickOpen()
     try:
-        cursor.execute("DELETE FROM Departments WHERE id = ?", (id,))
+        cursor.execute("DELETE FROM DEPARTMENTS WHERE departmentid = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
@@ -158,12 +145,14 @@ def deletedepartment(id):
         quickClose(cursor, conn)
         return "Failed", 400
 
-#Professor Methods
-
 @app.route("/get/professors", methods=["GET"])
 def getprofessors():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT Professors.id, Professors.name, Professors.email, Departments.name AS departmentname FROM Professors LEFT JOIN Departments ON Professors.departmentid = Departments.id")
+    cursor.execute("""
+        SELECT PROFESSORS.professorid, PROFESSORS.name, PROFESSORS.email, PROFESSORS.departmentid, DEPARTMENTS.name AS departmentname
+        FROM PROFESSORS
+        LEFT JOIN DEPARTMENTS ON PROFESSORS.departmentid = DEPARTMENTS.departmentid
+    """)
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -174,7 +163,7 @@ def addprofessor():
     data = request.get_json()
     try:
         cursor.execute("""
-            INSERT INTO Professors (name, email, departmentid)
+            INSERT INTO PROFESSORS (name, email, departmentid)
             VALUES (?, ?, ?)
         """, (data["name"], data["email"], int(data["departmentid"])))
         conn.commit()
@@ -190,8 +179,8 @@ def modifyprofessor(id):
     data = request.get_json()
     try:
         cursor.execute("""
-            UPDATE Professors SET name = ?, email = ?, departmentid = ?
-            WHERE id = ?
+            UPDATE PROFESSORS SET name = ?, email = ?, departmentid = ?
+            WHERE professorid = ?
         """, (data["name"], data["email"], int(data["departmentid"]), id))
         conn.commit()
         quickClose(cursor, conn)
@@ -204,7 +193,7 @@ def modifyprofessor(id):
 def deleteprofessor(id):
     cursor, conn = quickOpen()
     try:
-        cursor.execute("DELETE FROM Professors WHERE id = ?", (id,))
+        cursor.execute("DELETE FROM PROFESSORS WHERE professorid = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
@@ -212,12 +201,14 @@ def deleteprofessor(id):
         quickClose(cursor, conn)
         return "Failed", 400
 
-#Course functions
-
 @app.route("/get/courses", methods=["GET"])
 def getcourses():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT Courses.id, Courses.name, Courses.code, Courses.credits, Courses.description, Departments.name AS departmentname FROM Courses LEFT JOIN Departments ON Courses.departmentid = Departments.id")
+    cursor.execute("""
+        SELECT COURSES.courseid, COURSES.name, COURSES.code, COURSES.credits, COURSES.description, COURSES.departmentid, DEPARTMENTS.name AS departmentname
+        FROM COURSES
+        LEFT JOIN DEPARTMENTS ON COURSES.departmentid = DEPARTMENTS.departmentid
+    """)
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -228,7 +219,7 @@ def addcourse():
     data = request.get_json()
     try:
         cursor.execute("""
-            INSERT INTO Courses (name, code, credits, description, departmentid)
+            INSERT INTO COURSES (name, code, credits, description, departmentid)
             VALUES (?, ?, ?, ?, ?)
         """, (
             data["name"], data["code"], int(data["credits"]),
@@ -247,8 +238,8 @@ def modifycourse(id):
     data = request.get_json()
     try:
         cursor.execute("""
-            UPDATE Courses SET name = ?, code = ?, credits = ?, description = ?, departmentid = ?
-            WHERE id = ?
+            UPDATE COURSES SET name = ?, code = ?, credits = ?, description = ?, departmentid = ?
+            WHERE courseid = ?
         """, (
             data["name"], data["code"], int(data["credits"]),
             data["description"], int(data["departmentid"]), id
@@ -264,7 +255,7 @@ def modifycourse(id):
 def deletecourse(id):
     cursor, conn = quickOpen()
     try:
-        cursor.execute("DELETE FROM Courses WHERE id = ?", (id,))
+        cursor.execute("DELETE FROM COURSES WHERE courseid = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
@@ -272,12 +263,15 @@ def deletecourse(id):
         quickClose(cursor, conn)
         return "Failed", 400
 
-#Section methods
-
 @app.route("/get/sections", methods=["GET"])
 def getsections():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT Sections.id, Professors.name AS professorname, Courses.name AS coursename, Sections.schedule FROM Sections LEFT JOIN Professors ON Sections.professorid = Professors.id LEFT JOIN Courses ON Sections.courseid = Courses.id")
+    cursor.execute("""
+        SELECT SECTIONS.courseid, COURSES.name AS coursename, SECTIONS.sectionid, SECTIONS.professorid, PROFESSORS.name AS professorname, SECTIONS.schedule
+        FROM SECTIONS
+        LEFT JOIN PROFESSORS ON SECTIONS.professorid = PROFESSORS.professorid
+        LEFT JOIN COURSES ON SECTIONS.courseid = COURSES.courseid
+    """)
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -288,10 +282,11 @@ def addsection():
     data = request.get_json()
     try:
         cursor.execute("""
-            INSERT INTO Sections (professorid, courseid, schedule)
-            VALUES (?, ?, ?)
+            INSERT INTO SECTIONS (courseid, sectionid, professorid, schedule)
+            VALUES (?, ?, ?, ?)
         """, (
-            int(data["professorid"]), int(data["courseid"]), data["schedule"]
+            int(data["courseid"]), int(data["sectionid"]),
+            int(data["professorid"]), data["schedule"]
         ))
         conn.commit()
         quickClose(cursor, conn)
@@ -300,18 +295,18 @@ def addsection():
         quickClose(cursor, conn)
         return "Failed", 400
 
-@app.route("/api/sections/<int:id>", methods=["PUT"])
-def modifysection(id):
+@app.route("/api/sections/<int:courseid>/<int:sectionid>", methods=["PUT"])
+def modifysection(courseid, sectionid):
     cursor, conn = quickOpen()
     data = request.get_json()
     try:
         cursor.execute("""
-            UPDATE Sections
-            SET professorid = ?, courseid = ?, schedule = ?
-            WHERE id = ?
+            UPDATE SECTIONS
+            SET professorid = ?, schedule = ?
+            WHERE courseid = ? AND sectionid = ?
         """, (
-            int(data["professorid"]), int(data["courseid"]),
-            data["schedule"], id
+            int(data["professorid"]), data["schedule"],
+            courseid, sectionid
         ))
         conn.commit()
         quickClose(cursor, conn)
@@ -320,24 +315,37 @@ def modifysection(id):
         quickClose(cursor, conn)
         return "Failed", 400
 
-@app.route("/api/sections/<int:id>", methods=["DELETE"])
-def deletesection(id):
+
+@app.route("/api/sections/<int:courseid>/<int:sectionid>", methods=["DELETE"])
+def deletesection(courseid, sectionid):
     cursor, conn = quickOpen()
     try:
-        cursor.execute("DELETE FROM Sections WHERE id = ?", (id,))
+        cursor.execute("DELETE FROM SECTIONS WHERE courseid = ? AND sectionid = ?", (
+            courseid, sectionid
+        ))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-    except Exception:
+    except:
         quickClose(cursor, conn)
         return "Failed", 400
-
-#Enrollment functions
 
 @app.route("/get/enrollments", methods=["GET"])
 def getenrollments():
     cursor, conn = quickOpen()
-    cursor.execute("SELECT Enrollments.id, Students.name AS studentname, Enrollments.sectionid, Enrollments.grade FROM Enrollments LEFT JOIN Students ON Enrollments.studentid = Students.id")
+    cursor.execute("""
+        SELECT 
+            ENROLLMENTS.enrollmentid, 
+            ENROLLMENTS.studentid, 
+            STUDENTS.name AS studentname,
+            ENROLLMENTS.courseid, 
+            COURSES.name AS coursename,
+            ENROLLMENTS.sectionid, 
+            ENROLLMENTS.grade
+        FROM ENROLLMENTS
+        LEFT JOIN STUDENTS ON ENROLLMENTS.studentid = STUDENTS.studentid
+        LEFT JOIN COURSES ON ENROLLMENTS.courseid = COURSES.courseid
+    """)
     data = cursor.fetchall()
     quickClose(cursor, conn)
     return jsonify(data)
@@ -348,16 +356,16 @@ def addenrollment():
     data = request.get_json()
     try:
         cursor.execute("""
-            INSERT INTO Enrollments (studentid, sectionid, grade)
-            VALUES (?, ?, ?)
+            INSERT INTO ENROLLMENTS (studentid, courseid, sectionid, grade)
+            VALUES (?, ?, ?, ?)
         """, (
-            int(data["studentid"]), int(data["sectionid"]),
-            data["grade"]
+            int(data["studentid"]), int(data["courseid"]),
+            int(data["sectionid"]), data["grade"]
         ))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-    except Exception:
+    except:
         quickClose(cursor, conn)
         return "Failed", 400
 
@@ -367,17 +375,17 @@ def modifyenrollment(id):
     data = request.get_json()
     try:
         cursor.execute("""
-            UPDATE Enrollments
-            SET studentid = ?, sectionid = ?, grade = ?
-            WHERE id = ?
+            UPDATE ENROLLMENTS
+            SET studentid = ?, courseid = ?, sectionid = ?, grade = ?
+            WHERE enrollmentid = ?
         """, (
-            int(data["studentid"]), int(data["sectionid"]),
-            data["grade"], id
+            int(data["studentid"]), int(data["courseid"]),
+            int(data["sectionid"]), data["grade"], id
         ))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-    except Exception:
+    except:
         quickClose(cursor, conn)
         return "Failed", 400
 
@@ -385,20 +393,19 @@ def modifyenrollment(id):
 def deleteenrollment(id):
     cursor, conn = quickOpen()
     try:
-        cursor.execute("DELETE FROM Enrollments WHERE id = ?", (id,))
+        cursor.execute("DELETE FROM ENROLLMENTS WHERE enrollmentid = ?", (id,))
         conn.commit()
         quickClose(cursor, conn)
         return "Complete", 200
-    except Exception:
+    except:
         quickClose(cursor, conn)
         return "Failed", 400
 
-#initial db setup
 cursor, conn = quickOpen()
 try:
     dbstartup()
     conn.commit()
-except Exception:
+except:
     print("Issue with making Schema")
     conn.rollback()
 finally:
@@ -407,5 +414,4 @@ finally:
 unpopulateDB()
 populateDB()
 
-#hosts website to port 3000 to show website
 app.run(host='0.0.0.0', port=3000, debug=True)
