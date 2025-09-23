@@ -26,7 +26,7 @@ def dbstartup():
         professorid INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         email TEXT NOT NULL,
-        departmentid INTEGER,
+        departmentid INTEGER NOT NULL,
         FOREIGN KEY (departmentid) REFERENCES DEPARTMENTS(departmentid) ON DELETE CASCADE
     );
     """)
@@ -46,8 +46,8 @@ def dbstartup():
         name TEXT NOT NULL,
         code TEXT NOT NULL UNIQUE,
         credits INTEGER NOT NULL,
-        description TEXT,
-        departmentid INTEGER,
+        description TEXT NOT NULL,
+        departmentid INTEGER NOT NULL,
         FOREIGN KEY (departmentid) REFERENCES DEPARTMENTS(departmentid) ON DELETE CASCADE
     );
     """)
@@ -57,7 +57,7 @@ def dbstartup():
         courseid INTEGER NOT NULL,
         sectionid INTEGER NOT NULL,
         professorid INTEGER NOT NULL,
-        schedule TEXT,
+        schedule TEXT NOT NULL,
         PRIMARY KEY (courseid, sectionid),
         FOREIGN KEY (professorid) REFERENCES PROFESSORS(professorid) ON DELETE CASCADE,
         FOREIGN KEY (courseid) REFERENCES COURSES(courseid) ON DELETE CASCADE
